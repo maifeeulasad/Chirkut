@@ -2,6 +2,7 @@ package com.mua.chirkut;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mua.chirkut.activity.ChatActivity;
 import com.mua.chirkut.adapter.P2PListAdapter;
 import com.mua.chirkut.databinding.ActivityMainBinding;
 import com.mua.chirkut.listener.P2PConnectionListener;
@@ -134,6 +136,8 @@ public class MainActivity
 
     @Override
     public void onDeviceClick(WifiP2pDevice device) {
-        Log.d("d--mua","clicked : "+device.deviceName);
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("P2P-DEVICE",device);
+        startActivity(intent);
     }
 }
