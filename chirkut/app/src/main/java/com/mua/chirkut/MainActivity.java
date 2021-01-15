@@ -70,6 +70,7 @@ public class MainActivity
         closeAll();
         initReceiver();
         startDiscovery();
+        mBinding.pbLoading.show();
     }
 
     private void initList() {

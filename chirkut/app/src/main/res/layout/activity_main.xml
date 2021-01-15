@@ -35,6 +35,17 @@
 
         </LinearLayout>
 
+
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:indeterminate="true"
+            android:id="@+id/pb_loading"
+            android:scrollbarStyle="insideInset"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"/>
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_p2p_devices"
             android:layout_width="match_parent"
