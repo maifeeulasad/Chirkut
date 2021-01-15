@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.NetworkInfo;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,10 +22,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mua.chirkut.adapter.P2PListAdapter;
 import com.mua.chirkut.databinding.ActivityMainBinding;
 import com.mua.chirkut.listener.P2PConnectionListener;
+import com.mua.chirkut.listener.P2PDeviceClickListener;
 import com.mua.chirkut.viewmodel.MainViewModel;
 
 
-public class MainActivity extends AppCompatActivity implements P2PConnectionListener {
+public class MainActivity
+        extends AppCompatActivity
+        implements P2PConnectionListener, P2PDeviceClickListener {
 
     private final int MAX_CONNECTION_TRY = 5;
     private int connectionRetryCounter = 0;
@@ -68,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements P2PConnectionList
     }
 
     private void initList() {
-        mP2PListAdapter = new P2PListAdapter();
+        mP2PListAdapter = new P2PListAdapter(this);
         mRvP2PList = mBinding.rvP2pDevices;
         mRvP2PList.setAdapter(mP2PListAdapter);
         mRvP2PList.setLayoutManager(new LinearLayoutManager(this));
@@ -125,7 +130,12 @@ public class MainActivity extends AppCompatActivity implements P2PConnectionList
 
     @Override
     public void wifiP2PStatus(boolean status) {
-        //todo: update ui/viewmodel
+        viewModel.p2pStatus.postValue(status ? "Enabled" : "Disabled");
+    }
+
+    @Override
+    public void onDeviceClick(WifiP2pDevice device) {
+        Log.d("d--mua","clicked : "+device.deviceName);
     }
 }
 
