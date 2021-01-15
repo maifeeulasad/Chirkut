@@ -2,15 +2,20 @@ package com.mua.chirkut;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.WpsInfo;
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
@@ -70,6 +75,7 @@ public class MainActivity
         closeAll();
         initReceiver();
         startDiscovery();
+        startListenIncoming();
         mBinding.pbLoading.show();
     }
 
@@ -95,6 +101,15 @@ public class MainActivity
             @Override
             public void onFailure(int reason) {
                 Toast.makeText(MainActivity.this, "Force closing may resolve this issue.", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void startListenIncoming(){
+        mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
+            @Override
+            public void onConnectionInfoAvailable(WifiP2pInfo info) {
+                Log.d("d--mua-lp",info.groupOwnerAddress+" ip address");
             }
         });
     }
@@ -135,9 +150,50 @@ public class MainActivity
     }
 
     @Override
+    public void incomingConnection(WifiP2pInfo wifiP2pInfo) {
+        if(!wifiP2pInfo.isGroupOwner || wifiP2pInfo.groupOwnerAddress==null)
+            return;
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Incoming Connection Request")
+                .setMessage(wifiP2pInfo.groupOwnerAddress+" wants to connect")
+                .setPositiveButton("Yes", (dialogInterface, i) ->
+                        openChat(wifiP2pInfo.groupOwnerAddress.toString())
+                )
+                .setNegativeButton("No", (dialogInterface, i) ->{
+                    //todo: notify requester
+                }
+                )
+                .show();
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
     public void onDeviceClick(WifiP2pDevice device) {
+
+        WifiP2pConfig config = new WifiP2pConfig();
+        config.deviceAddress = device.deviceAddress;
+        config.wps.setup = WpsInfo.PBC;
+
+        mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
+
+            @Override
+            public void onSuccess() {
+                Log.d("d--mua-lp","success");
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Log.d("d--mua-lp","failed : "+reason);
+            }
+        });
+
+    }
+
+    private void openChat(String groupOwnerIP){
         Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra("P2P-DEVICE",device);
+        intent.putExtra("GROUP_OWNER_IP",groupOwnerIP);
         startActivity(intent);
     }
+
 }

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.util.Log;
 
 import com.mua.chirkut.listener.P2PConnectionListener;
 
@@ -53,9 +54,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
                     .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
             if (networkInfo.isConnected()) {
                 mConnected = true;
-                mManager.requestConnectionInfo(mChannel, wifiP2pInfo -> {
-                    //todo: someone asking to be connected
-                });
+                mManager.requestConnectionInfo(mChannel, mP2PConnectionListener::incomingConnection);
             } else {
                 mConnected = false;
                 if (mInitiated) {
