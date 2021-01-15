@@ -92,7 +92,6 @@ public class MainActivity
     }
 
     private void closeAll() {
-
         mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
@@ -151,8 +150,12 @@ public class MainActivity
 
     @Override
     public void incomingConnection(WifiP2pInfo wifiP2pInfo) {
-        if(!wifiP2pInfo.isGroupOwner || wifiP2pInfo.groupOwnerAddress==null)
+        if(wifiP2pInfo.groupOwnerAddress==null){
             return;
+        }
+        //todo : bug, the device first opening app is trying to become the host
+        //if(!wifiP2pInfo.isGroupOwner || wifiP2pInfo.groupOwnerAddress==null)
+        //    return;
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Incoming Connection Request")
@@ -161,6 +164,7 @@ public class MainActivity
                         openChat(wifiP2pInfo.groupOwnerAddress.toString())
                 )
                 .setNegativeButton("No", (dialogInterface, i) ->{
+                    openChat();
                     //todo: notify requester
                 }
                 )
@@ -188,6 +192,11 @@ public class MainActivity
             }
         });
 
+    }
+
+    private void openChat(){
+        Intent intent = new Intent(this, ChatActivity.class);
+        startActivity(intent);
     }
 
     private void openChat(String groupOwnerIP){
