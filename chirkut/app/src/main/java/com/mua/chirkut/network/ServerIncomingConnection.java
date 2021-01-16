@@ -3,19 +3,18 @@ package com.mua.chirkut.network;
 
 import android.util.Log;
 
-import com.mua.chirkut.listener.IncomingSocketListener;
+import com.mua.chirkut.listener.IncomingConnectionListener;
 
-import java.io.IOException;
 import java.net.Socket;
 
-public class ServerIncoming implements Runnable{
+public class ServerIncomingConnection implements Runnable{
 
     private final Server server;
-    private final IncomingSocketListener incomingSocketListener;
+    private final IncomingConnectionListener incomingConnectionListener;
 
-    public ServerIncoming(Server server, IncomingSocketListener incomingSocketListener) {
+    public ServerIncomingConnection(Server server, IncomingConnectionListener incomingConnectionListener) {
         this.server = server;
-        this.incomingSocketListener = incomingSocketListener;
+        this.incomingConnectionListener = incomingConnectionListener;
     }
 
     @Override
@@ -25,7 +24,7 @@ public class ServerIncoming implements Runnable{
             try {
                 Log.d("d--mua-zp","age");
                 Socket socket = server.getServerSocket().accept();
-                incomingSocketListener.incomingSocket(socket);
+                incomingConnectionListener.incomingSocket(socket);
                 Log.d("d--mua-zp","pore");
             } catch (Exception e) {
                 break;

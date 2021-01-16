@@ -2,6 +2,6 @@ package com.mua.chirkut.listener;
 
 import java.net.Socket;
 
-public interface IncomingSocketListener {
+public interface IncomingConnectionListener {
     void incomingSocket(Socket socket);
 }

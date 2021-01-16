@@ -2,7 +2,7 @@ package com.mua.chirkut.network;
 
 import android.util.Log;
 
-import com.mua.chirkut.listener.IncomingSocketListener;
+import com.mua.chirkut.listener.IncomingConnectionListener;
 import com.mua.chirkut.util.Default;
 
 import java.io.DataInputStream;
@@ -13,16 +13,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Server
-        implements Runnable, IncomingSocketListener {
+        implements Runnable, IncomingConnectionListener {
 
     private static Server server = null;
     private final ServerSocket serverSocket;
     private final Map<String, Socket> socketMapping = new HashMap<>();
-    private final ServerIncoming serverIncoming;
+    private final ServerIncomingConnection serverIncomingConnection;
 
     private Server() throws IOException {
         serverSocket = new ServerSocket(Default.PORT);
-        serverIncoming = new ServerIncoming(this, this);
+        serverIncomingConnection = new ServerIncomingConnection(this, this);
     }
 
     public static Server getServer() {
@@ -32,7 +32,7 @@ public class Server
             } catch (Exception ignored) {
             }
         }
-        new Thread(server.serverIncoming).start();
+        new Thread(server.serverIncomingConnection).start();
         new Thread(Server.server).start();
         return server;
     }
@@ -64,6 +64,7 @@ public class Server
             DataInputStream in = new DataInputStream(socket.getInputStream());
             while(!end)
             {
+                Log.d("d--mua--ll","mainkar chipa");
                 int bytesRead = in.read(bytes);
                 res.append(new String(bytes, 0, bytesRead));
                 if (res.length() == 1024)
