@@ -57,7 +57,7 @@ public class MainActivity
         mBinding.setMain(viewModel);
         mBinding.setLifecycleOwner(this);
 
-        //todo: disable this
+        //todo: disable next line - testing purpose
         testMessage();
         init();
     }

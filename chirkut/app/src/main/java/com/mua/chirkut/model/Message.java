@@ -15,7 +15,7 @@ public class Message {
     }
 
     public Message() {
-        this("test"+ new Random().nextGaussian(),
+        this("test"+ new Random().nextGaussian()+"\n"+new Random().nextDouble(),
                 new Random().nextBoolean(),
                 "ip"+new Random().nextDouble());
     }

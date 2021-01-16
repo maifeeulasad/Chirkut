@@ -42,9 +42,13 @@ public class ChatActivity extends AppCompatActivity {
         mBinding.setLifecycleOwner(this);
 
         initList();
-        //todo: comment the next line
+        //todo: disable next line - testing purpose
         initMessageTest();
 
+        initServerClient();
+    }
+
+    void initServerClient(){
         threads.clear();
 
         String val = "";
