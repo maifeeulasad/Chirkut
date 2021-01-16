@@ -64,7 +64,10 @@ public class ChatActivity extends AppCompatActivity {
 
     void initMessageTest(){
         mBinding.btnSend.setOnClickListener(
-                v -> mChatAdapter.appendMessage(new Message())
+                v -> {
+                    mChatAdapter.appendMessage(new Message());
+                    mBinding.rvChat.scrollToPosition(mChatAdapter.getItemCount()-1);
+                }
         );
     }
 
