@@ -2,6 +2,7 @@ package com.mua.chirkut.network;
 
 import android.util.Log;
 
+import com.mua.chirkut.listener.IncomingSocketListener;
 import com.mua.chirkut.util.Default;
 
 import java.io.DataInputStream;
@@ -11,59 +12,40 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Server implements Runnable {
+public class Server
+        implements Runnable, IncomingSocketListener {
 
     private static Server server = null;
-    public final ServerSocket serverSocket;
+    private final ServerSocket serverSocket;
     private final Map<String, Socket> socketMapping = new HashMap<>();
-
+    private final ServerIncoming serverIncoming;
 
     private Server() throws IOException {
         serverSocket = new ServerSocket(Default.PORT);
+        serverIncoming = new ServerIncoming(this, this);
     }
 
-    public static Server Server() {
+    public static Server getServer() {
         if (server == null) {
             try {
                 server = new Server();
             } catch (Exception ignored) {
             }
         }
+        new Thread(server.serverIncoming).start();
         new Thread(Server.server).start();
         return server;
     }
 
-    public Socket acceptConnection() {
-        try {
-            return serverSocket.accept();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-
     @Override
     public void run() {
         while (true) {
-            processNewConnection();
             readAllConnectionMessage();
         }
     }
 
-    void processNewConnection(){
-        new Thread(){
-            @Override
-            public void run() {
-                Socket socket = acceptConnection();
-                if (socket == null) {
-                    //todo: show error
-                } else {
-                    socketMapping.put(socket.getInetAddress().getHostAddress(), socket);
-                }
-            }
-        }.start();
-    }
     void readAllConnectionMessage(){
+        Log.d("d--mua--zp","reading "+socketMapping.size());
         for(String key :socketMapping.keySet()){
             Socket socket = socketMapping.get(key);
             String message = readSocketMessage(socket);
@@ -94,5 +76,17 @@ public class Server implements Runnable {
         return res.toString();
     }
 
+    public ServerSocket getServerSocket() {
+        return serverSocket;
+    }
 
+    public Map<String, Socket> getSocketMapping() {
+        return socketMapping;
+    }
+
+    @Override
+    public void incomingSocket(Socket socket) {
+        Log.d("d--mua-new","new");
+        socketMapping.put(socket.getInetAddress().getHostAddress(), socket);
+    }
 }

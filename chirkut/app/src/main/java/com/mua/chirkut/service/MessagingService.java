@@ -28,7 +28,7 @@ public class MessagingService extends Service{
     private final Server server;
 
     public MessagingService() throws IOException {
-        this.server = Server.Server();
+        this.server = Server.getServer();
     }
 
     @Override
