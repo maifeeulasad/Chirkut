@@ -1,7 +1,6 @@
 package com.mua.chirkut.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,16 +9,19 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.mua.chirkut.R;
 import com.mua.chirkut.databinding.ActivityChatBinding;
-import com.mua.chirkut.socket.Client;
-import com.mua.chirkut.socket.Server;
+import com.mua.chirkut.network.Client;
+import com.mua.chirkut.network.Server;
 import com.mua.chirkut.viewmodel.ChatViewModel;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
 
     private ActivityChatBinding mBinding;
     private ChatViewModel viewModel;
+
+    private List<Thread> threads=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,8 @@ public class ChatActivity extends AppCompatActivity {
         mBinding.setChat(viewModel);
         mBinding.setLifecycleOwner(this);
 
+        threads.clear();
+
         String val = "";
         try {
             val = getIntent().getExtras().getString("GROUP_OWNER_IP");
@@ -37,18 +41,13 @@ public class ChatActivity extends AppCompatActivity {
 
         }
 
-        try {
-            if(val.equals("")){
-                new Server().start();
-                Toast.makeText(this,"server only",Toast.LENGTH_LONG).show();
-            }else{
-                Toast.makeText(this,"not ok ??",Toast.LENGTH_LONG).show();
-                new Server().start();
-                new Client(val).start();
-                Toast.makeText(this,"server + client",Toast.LENGTH_LONG).show();
-            }
-        } catch (Exception ignored) {
-
+        if(val.equals("")){
+            threads.add(new Server());
+            Toast.makeText(this,"server only",Toast.LENGTH_LONG).show();
+        }else{
+            threads.add(new Server());
+            threads.add(new Client(val));
+            Toast.makeText(this,"server + client",Toast.LENGTH_LONG).show();
         }
     }
 }
