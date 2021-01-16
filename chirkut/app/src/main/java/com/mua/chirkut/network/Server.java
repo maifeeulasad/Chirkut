@@ -1,17 +1,15 @@
 package com.mua.chirkut.network;
 
-import android.util.Log;
-
 import com.mua.chirkut.listener.IncomingConnectionListener;
 import com.mua.chirkut.listener.IncomingMessageListener;
 import com.mua.chirkut.util.Default;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +32,8 @@ public class Server
         if (server == null) {
             try {
                 server = new Server(incomingMessageListener);
-            } catch (Exception ignored) { }
+            } catch (Exception ignored) {
+            }
         }
         new Thread(server.serverIncomingConnection).start();
         new Thread(Server.server).start();
@@ -48,21 +47,21 @@ public class Server
         }
     }
 
-    void readAllConnectionMessage(){
-        for(String key :socketMapping.keySet()){
+    void readAllConnectionMessage() {
+        for (String key : socketMapping.keySet()) {
             Socket socket = socketMapping.get(key);
             String message = readSocketMessage(socket);
-            incomingMessageListener.incomingMessage(socket.getInetAddress().getHostAddress(),message);
+            incomingMessageListener.incomingMessage(socket.getInetAddress().getHostAddress(), message);
         }
     }
 
-    String readSocketMessage(Socket socket){
+    String readSocketMessage(Socket socket) {
         try {
             String res
                     = new BufferedReader(
-                            new InputStreamReader(socket.getInputStream(),"UTF-8"))
+                    new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))
                     .readLine();
-            return (res==null) ? "" : res;
+            return (res == null) ? "" : res;
         } catch (Exception e) {
             return "";
         }

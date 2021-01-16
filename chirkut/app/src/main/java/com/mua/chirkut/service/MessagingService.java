@@ -8,7 +8,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -17,11 +16,6 @@ import com.mua.chirkut.MainActivity;
 import com.mua.chirkut.R;
 import com.mua.chirkut.listener.IncomingMessageListener;
 import com.mua.chirkut.network.Server;
-
-import java.io.IOException;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MessagingService
         extends Service
@@ -70,12 +64,12 @@ public class MessagingService
 
     @Override
     public void incomingMessage(String address, String message) {
-        if(message.equals(""))
+        if (message.equals(""))
             return;
 
         Intent intent = new Intent("mua.message");
-        intent.putExtra("address",address);
-        intent.putExtra("message",message);
+        intent.putExtra("address", address);
+        intent.putExtra("message", message);
         sendBroadcast(intent);
     }
 }

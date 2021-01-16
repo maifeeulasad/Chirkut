@@ -23,9 +23,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mua.chirkut.activity.ChatActivity;
-import com.mua.chirkut.adapter.ChatAdapter;
 import com.mua.chirkut.adapter.P2PListAdapter;
 import com.mua.chirkut.databinding.ActivityMainBinding;
+import com.mua.chirkut.listener.IncomingMessageListener;
 import com.mua.chirkut.listener.P2PConnectionListener;
 import com.mua.chirkut.listener.P2PDeviceClickListener;
 import com.mua.chirkut.receiver.MessageReceiver;
@@ -36,7 +36,7 @@ import com.mua.chirkut.viewmodel.MainViewModel;
 
 public class MainActivity
         extends AppCompatActivity
-        implements P2PConnectionListener, P2PDeviceClickListener {
+        implements P2PConnectionListener, P2PDeviceClickListener, IncomingMessageListener {
 
     private final int MAX_CONNECTION_TRY = 5;
     private int connectionRetryCounter = 0;
@@ -68,7 +68,7 @@ public class MainActivity
         initReceiveMessageBroadcast();
     }
 
-    void startService(){
+    void startService() {
         Intent serviceIntent = new Intent(this, MessagingService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent);
@@ -78,13 +78,15 @@ public class MainActivity
     }
 
 
-    void testMessage(){
-        startActivity(new Intent(this,ChatActivity.class));
+    void testMessage() {
+        startActivity(new Intent(this, ChatActivity.class));
     }
 
 
-    void initReceiveMessageBroadcast(){
-        registerReceiver(new MessageReceiver(),new IntentFilter("mua.message"));
+    void initReceiveMessageBroadcast() {
+        registerReceiver(
+                new MessageReceiver(this),
+                new IntentFilter("mua.message"));
     }
 
     void init() {
@@ -131,11 +133,11 @@ public class MainActivity
         });
     }
 
-    public void startListenIncoming(){
+    public void startListenIncoming() {
         mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
             @Override
             public void onConnectionInfoAvailable(WifiP2pInfo info) {
-                Log.d("d--mua-lp",info.groupOwnerAddress+" ip address");
+                Log.d("d--mua-lp", info.groupOwnerAddress + " ip address");
             }
         });
     }
@@ -177,7 +179,7 @@ public class MainActivity
 
     @Override
     public void incomingConnection(WifiP2pInfo wifiP2pInfo) {
-        if(wifiP2pInfo.groupOwnerAddress==null){
+        if (wifiP2pInfo.groupOwnerAddress == null) {
             return;
         }
         //todo : bug, the device first opening app is trying to become the host
@@ -186,14 +188,14 @@ public class MainActivity
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Incoming Connection Request")
-                .setMessage(wifiP2pInfo.groupOwnerAddress+" wants to connect")
+                .setMessage(wifiP2pInfo.groupOwnerAddress + " wants to connect")
                 .setPositiveButton("Yes", (dialogInterface, i) ->
                         openChat(wifiP2pInfo.groupOwnerAddress.toString())
                 )
-                .setNegativeButton("No", (dialogInterface, i) ->{
-                    openChat();
-                    //todo: notify requester
-                }
+                .setNegativeButton("No", (dialogInterface, i) -> {
+                            openChat();
+                            //todo: notify requester
+                        }
                 )
                 .show();
     }
@@ -210,26 +212,31 @@ public class MainActivity
 
             @Override
             public void onSuccess() {
-                Log.d("d--mua-lp","success");
+                Log.d("d--mua-lp", "success");
             }
 
             @Override
             public void onFailure(int reason) {
-                Log.d("d--mua-lp","failed : "+reason);
+                Log.d("d--mua-lp", "failed : " + reason);
             }
         });
 
     }
 
-    private void openChat(){
+    private void openChat() {
         Intent intent = new Intent(this, ChatActivity.class);
         startActivity(intent);
     }
 
-    private void openChat(String groupOwnerIP){
+    private void openChat(String groupOwnerIP) {
         Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra("GROUP_OWNER_IP",groupOwnerIP);
+        intent.putExtra("GROUP_OWNER_IP", groupOwnerIP);
         startActivity(intent);
     }
 
+    @Override
+    public void incomingMessage(String address, String message) {
+        Log.d("d--muapp",address);
+        Log.d("d--muapp",message);
+    }
 }
