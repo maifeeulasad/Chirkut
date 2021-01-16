@@ -8,16 +8,31 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.mua.chirkut.MainActivity;
 import com.mua.chirkut.R;
+import com.mua.chirkut.network.Server;
 
-public class MessagingService extends Service {
+import java.io.IOException;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+
+public class MessagingService extends Service{
 
     private static final String ID = MessagingService.class.getName();
+    private final Server server;
+    private final List<Socket> socketList = new ArrayList<>();
+
+    public MessagingService() throws IOException {
+        this.server = Server.Server();
+
+        //this.server = new Server();
+    }
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
@@ -51,6 +66,7 @@ public class MessagingService extends Service {
                 .setContentIntent(pendingIntent)
                 .build();
         startForeground(1, notification);
+        //new Thread(this).start();
     }
 
 }
