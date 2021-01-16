@@ -10,6 +10,7 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ import com.mua.chirkut.databinding.ActivityMainBinding;
 import com.mua.chirkut.listener.P2PConnectionListener;
 import com.mua.chirkut.listener.P2PDeviceClickListener;
 import com.mua.chirkut.receiver.WifiDirectBroadcastReceiver;
+import com.mua.chirkut.service.MessagingService;
 import com.mua.chirkut.viewmodel.MainViewModel;
 
 
@@ -60,6 +62,16 @@ public class MainActivity
         //todo: disable next line - testing purpose
         testMessage();
         init();
+        startService();
+    }
+
+    void startService(){
+        Intent serviceIntent = new Intent(this, MessagingService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent);
+        } else {
+            startService(serviceIntent);
+        }
     }
 
 
