@@ -5,8 +5,10 @@ import android.util.Log;
 import com.mua.chirkut.listener.IncomingConnectionListener;
 import com.mua.chirkut.util.Default;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -29,8 +31,7 @@ public class Server
         if (server == null) {
             try {
                 server = new Server();
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) { }
         }
         new Thread(server.serverIncomingConnection).start();
         new Thread(Server.server).start();
@@ -50,31 +51,22 @@ public class Server
             Socket socket = socketMapping.get(key);
             String message = readSocketMessage(socket);
             Log.d("d--mua--net-rec",key);
-            Log.d("d--mua--net-rec",message);
+            //if(message!=null)
+            Log.d("d--mua--net-recx",message);
             Log.d("d--mua--net-rec","----------------");
         }
     }
 
     String readSocketMessage(Socket socket){
-        byte[] bytes = new byte[1024];
-        boolean end = false;
-        StringBuilder res = new StringBuilder();
-        try
-        {
-            DataInputStream in = new DataInputStream(socket.getInputStream());
-            while(!end)
-            {
-                Log.d("d--mua--ll","mainkar chipa");
-                int bytesRead = in.read(bytes);
-                res.append(new String(bytes, 0, bytesRead));
-                if (res.length() == 1024)
-                {
-                    end = true;
-                }
-            }
+        try {
+            String res
+                    = new BufferedReader(
+                            new InputStreamReader(socket.getInputStream(),"UTF-8"))
+                    .readLine();
+            return (res==null) ? "" : res;
+        } catch (Exception e) {
+            return "";
         }
-        catch (Exception ignored) { }
-        return res.toString();
     }
 
     public ServerSocket getServerSocket() {
