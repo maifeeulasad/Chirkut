@@ -26,12 +26,9 @@ public class MessagingService extends Service{
 
     private static final String ID = MessagingService.class.getName();
     private final Server server;
-    private final List<Socket> socketList = new ArrayList<>();
 
     public MessagingService() throws IOException {
         this.server = Server.Server();
-
-        //this.server = new Server();
     }
 
     @Override
@@ -66,7 +63,6 @@ public class MessagingService extends Service{
                 .setContentIntent(pendingIntent)
                 .build();
         startForeground(1, notification);
-        //new Thread(this).start();
     }
 
 }

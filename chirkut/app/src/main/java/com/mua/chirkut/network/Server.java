@@ -4,35 +4,39 @@ import android.util.Log;
 
 import com.mua.chirkut.util.Default;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Server implements Runnable{
+public class Server implements Runnable {
 
-    public final ServerSocket serverSocket;
     private static Server server = null;
+    public final ServerSocket serverSocket;
+    private final Map<String, Socket> socketMapping = new HashMap<>();
 
-    public static Server Server(){
-        if(server==null){
-            try {
-                server = new Server();
-            } catch (Exception ignored) { }
-        }
-        new Thread(Server.server).start();
-        return server;
-    }
 
     private Server() throws IOException {
         serverSocket = new ServerSocket(Default.PORT);
     }
 
-    public Socket acceptConnection(){
-        try{
-            //return null;
+    public static Server Server() {
+        if (server == null) {
+            try {
+                server = new Server();
+            } catch (Exception ignored) {
+            }
+        }
+        new Thread(Server.server).start();
+        return server;
+    }
+
+    public Socket acceptConnection() {
+        try {
             return serverSocket.accept();
-        }catch (Exception e){
-            Log.d("d--mua--net-dd",e.getMessage());
+        } catch (Exception e) {
             return null;
         }
     }
@@ -40,26 +44,55 @@ public class Server implements Runnable{
 
     @Override
     public void run() {
-        Log.d("d--mua--net","start0000000000000000000000");
-        while(true){
-            Log.d("d--mua--net","start");
-            try {
-                Log.d("d--mua--net","start-1");
-                //server.acceptConnection();
-                Socket socket = acceptConnection();
-                Log.d("d--mua--net","start-2");
-                if(socket==null) {
-                    Log.d("d--mua--net","socket--null");
-                }
-                else {
-                    Log.d("d--mua--net","ache ache");
-                }
-            } catch (Exception e) {
-                Log.d("d--mua--net","break");
-                Log.d("d--mua--net-eer",e.getMessage());
-                break;
-            }
+        while (true) {
+            processNewConnection();
+            readAllConnectionMessage();
         }
     }
+
+    void processNewConnection(){
+        new Thread(){
+            @Override
+            public void run() {
+                Socket socket = acceptConnection();
+                if (socket == null) {
+                    //todo: show error
+                } else {
+                    socketMapping.put(socket.getInetAddress().getHostAddress(), socket);
+                }
+            }
+        }.start();
+    }
+    void readAllConnectionMessage(){
+        for(String key :socketMapping.keySet()){
+            Socket socket = socketMapping.get(key);
+            String message = readSocketMessage(socket);
+            Log.d("d--mua--net-rec",key);
+            Log.d("d--mua--net-rec",message);
+            Log.d("d--mua--net-rec","----------------");
+        }
+    }
+
+    String readSocketMessage(Socket socket){
+        byte[] bytes = new byte[1024];
+        boolean end = false;
+        StringBuilder res = new StringBuilder();
+        try
+        {
+            DataInputStream in = new DataInputStream(socket.getInputStream());
+            while(!end)
+            {
+                int bytesRead = in.read(bytes);
+                res.append(new String(bytes, 0, bytesRead));
+                if (res.length() == 1024)
+                {
+                    end = true;
+                }
+            }
+        }
+        catch (Exception ignored) { }
+        return res.toString();
+    }
+
 
 }
