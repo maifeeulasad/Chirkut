@@ -2,7 +2,6 @@ package com.mua.chirkut;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WpsInfo;
@@ -23,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mua.chirkut.activity.ChatActivity;
+import com.mua.chirkut.adapter.ChatAdapter;
 import com.mua.chirkut.adapter.P2PListAdapter;
 import com.mua.chirkut.databinding.ActivityMainBinding;
 import com.mua.chirkut.listener.P2PConnectionListener;
@@ -57,7 +57,14 @@ public class MainActivity
         mBinding.setMain(viewModel);
         mBinding.setLifecycleOwner(this);
 
+        //todo: disable this
+        testMessage();
         init();
+    }
+
+
+    void testMessage(){
+        startActivity(new Intent(this,ChatActivity.class));
     }
 
     void init() {
