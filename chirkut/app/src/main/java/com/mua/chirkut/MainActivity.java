@@ -236,7 +236,6 @@ public class MainActivity
 
     @Override
     public void incomingMessage(String address, String message) {
-        Log.d("d--muapp",address);
-        Log.d("d--muapp",message);
+        viewModel.insertChat(address,message,true);
     }
 }

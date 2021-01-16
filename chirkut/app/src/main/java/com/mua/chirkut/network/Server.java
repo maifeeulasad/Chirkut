@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,7 +58,7 @@ public class Server
         try {
             String res
                     = new BufferedReader(
-                    new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))
+                    new InputStreamReader(socket.getInputStream(), "UTF-8"))
                     .readLine();
             return (res == null) ? "" : res;
         } catch (Exception e) {
