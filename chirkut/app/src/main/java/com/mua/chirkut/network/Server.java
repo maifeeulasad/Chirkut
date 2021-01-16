@@ -3,6 +3,7 @@ package com.mua.chirkut.network;
 import android.util.Log;
 
 import com.mua.chirkut.listener.IncomingConnectionListener;
+import com.mua.chirkut.listener.IncomingMessageListener;
 import com.mua.chirkut.util.Default;
 
 import java.io.BufferedReader;
@@ -21,16 +22,18 @@ public class Server
     private final ServerSocket serverSocket;
     private final Map<String, Socket> socketMapping = new HashMap<>();
     private final ServerIncomingConnection serverIncomingConnection;
+    private final IncomingMessageListener incomingMessageListener;
 
-    private Server() throws IOException {
+    private Server(IncomingMessageListener incomingMessageListener) throws IOException {
         serverSocket = new ServerSocket(Default.PORT);
         serverIncomingConnection = new ServerIncomingConnection(this, this);
+        this.incomingMessageListener = incomingMessageListener;
     }
 
-    public static Server getServer() {
+    public static Server getServer(IncomingMessageListener incomingMessageListener) {
         if (server == null) {
             try {
-                server = new Server();
+                server = new Server(incomingMessageListener);
             } catch (Exception ignored) { }
         }
         new Thread(server.serverIncomingConnection).start();
@@ -46,14 +49,10 @@ public class Server
     }
 
     void readAllConnectionMessage(){
-        Log.d("d--mua--zp","reading "+socketMapping.size());
         for(String key :socketMapping.keySet()){
             Socket socket = socketMapping.get(key);
             String message = readSocketMessage(socket);
-            Log.d("d--mua--net-rec",key);
-            //if(message!=null)
-            Log.d("d--mua--net-recx",message);
-            Log.d("d--mua--net-rec","----------------");
+            incomingMessageListener.incomingMessage(socket.getInetAddress().getHostAddress(),message);
         }
     }
 
@@ -79,7 +78,6 @@ public class Server
 
     @Override
     public void incomingSocket(Socket socket) {
-        Log.d("d--mua-new","new");
         socketMapping.put(socket.getInetAddress().getHostAddress(), socket);
     }
 }

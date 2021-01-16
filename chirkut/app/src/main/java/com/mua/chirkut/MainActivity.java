@@ -28,6 +28,7 @@ import com.mua.chirkut.adapter.P2PListAdapter;
 import com.mua.chirkut.databinding.ActivityMainBinding;
 import com.mua.chirkut.listener.P2PConnectionListener;
 import com.mua.chirkut.listener.P2PDeviceClickListener;
+import com.mua.chirkut.receiver.MessageReceiver;
 import com.mua.chirkut.receiver.WifiDirectBroadcastReceiver;
 import com.mua.chirkut.service.MessagingService;
 import com.mua.chirkut.viewmodel.MainViewModel;
@@ -63,6 +64,8 @@ public class MainActivity
         testMessage();
         init();
         startService();
+        initReceiver();
+        initReceiveMessageBroadcast();
     }
 
     void startService(){
@@ -77,6 +80,11 @@ public class MainActivity
 
     void testMessage(){
         startActivity(new Intent(this,ChatActivity.class));
+    }
+
+
+    void initReceiveMessageBroadcast(){
+        registerReceiver(new MessageReceiver(),new IntentFilter("mua.message"));
     }
 
     void init() {

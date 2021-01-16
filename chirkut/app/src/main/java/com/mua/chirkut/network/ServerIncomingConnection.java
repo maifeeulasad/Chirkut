@@ -20,12 +20,9 @@ public class ServerIncomingConnection implements Runnable{
     @Override
     public void run() {
         while (true){
-            Log.d("d--mua-zp","sehra");
             try {
-                Log.d("d--mua-zp","age");
                 Socket socket = server.getServerSocket().accept();
                 incomingConnectionListener.incomingSocket(socket);
-                Log.d("d--mua-zp","pore");
             } catch (Exception e) {
                 break;
             }
