@@ -43,9 +43,13 @@ public class ChatActivity extends AppCompatActivity {
 
         initList();
         //todo: disable next line - testing purpose
-        initMessageTest();
+        //initMessageTest();
 
         initServerClient();
+    }
+
+    void setTitle(String title){
+        getSupportActionBar().setTitle(title);
     }
 
     void initServerClient(){
@@ -60,6 +64,7 @@ public class ChatActivity extends AppCompatActivity {
             threads.add(new Server());
             Toast.makeText(this,"server only",Toast.LENGTH_LONG).show();
         }else{
+            setTitle(val);
             threads.add(new Server());
             threads.add(new Client(val));
             Toast.makeText(this,"server + client",Toast.LENGTH_LONG).show();
