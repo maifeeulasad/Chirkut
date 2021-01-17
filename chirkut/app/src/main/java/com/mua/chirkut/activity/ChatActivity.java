@@ -93,6 +93,8 @@ public class ChatActivity
             val = getIntent().getExtras().getString("GROUP_OWNER_IP");
         }catch (Exception ignored){ }
 
+        viewModel.updateAddress(val);
+
         setTitle(val);
     }
 
@@ -115,12 +117,14 @@ public class ChatActivity
             if(messageString.trim().equals("")){
                 return;
             }
-            //todo:fix hardcoded
-            viewModel.insert("192.168.0.108",messageString);
+            viewModel.insert(viewModel.address.getValue(),messageString);
             mBinding.etMessage.setText("");
             if(messenger!=null){
                 android.os.Message message
-                        = android.os.Message.obtain(null,0,messageString);
+                        = android.os.Message.obtain(
+                                null,
+                        0,
+                        viewModel.address.getValue()+"-"+messageString);
                 try {
                     messenger.send(message);
                 } catch (RemoteException e) {

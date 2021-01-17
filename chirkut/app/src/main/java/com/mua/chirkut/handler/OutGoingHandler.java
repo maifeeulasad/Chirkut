@@ -23,9 +23,10 @@ public class OutGoingHandler extends Handler {
         if(msg.what!=0){
             super.handleMessage(msg);
         }else{
-            //Log.d("d--mua--net-message",msg.obj.toString());
-            //todo:fix hardcoded
-            outgoingMessageListener.outgoingMessage("192.168.0.101",msg.obj.toString());
+            String data = msg.obj.toString();
+            String address = data.substring(0,data.indexOf("-"));
+            String message = data.substring(data.indexOf("-"));
+            outgoingMessageListener.outgoingMessage(address,message);
         }
     }
 }
