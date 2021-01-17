@@ -30,7 +30,6 @@ public class Message {
     @ColumnInfo(name = "message_incoming")
     private Boolean incoming;
 
-
     public Message(String address, String message, Date date, Boolean incoming) {
         this.address = address;
         this.message = message;

@@ -31,6 +31,7 @@ import com.mua.chirkut.activity.ChatActivity;
 import com.mua.chirkut.adapter.P2PListAdapter;
 import com.mua.chirkut.databinding.ActivityMainBinding;
 import com.mua.chirkut.listener.IncomingMessageListener;
+import com.mua.chirkut.listener.OutgoingMessageListener;
 import com.mua.chirkut.listener.P2PConnectionListener;
 import com.mua.chirkut.listener.P2PDeviceClickListener;
 import com.mua.chirkut.receiver.MessageReceiver;
@@ -41,7 +42,7 @@ import com.mua.chirkut.viewmodel.MainViewModel;
 
 public class MainActivity
         extends AppCompatActivity
-        implements P2PConnectionListener, P2PDeviceClickListener, IncomingMessageListener {
+        implements P2PConnectionListener, P2PDeviceClickListener, IncomingMessageListener, OutgoingMessageListener {
 
     //todo: change the value
     private final int MAX_CONNECTION_TRY = 0;
@@ -62,12 +63,10 @@ public class MainActivity
     private Messenger messenger;
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
-            Log.d("d--mua--test","ok?");
             messenger = new Messenger(service);
         }
 
         public void onServiceDisconnected(ComponentName className) {
-            Log.d("d--mua--test","not ok?");
             messenger = null;
         }
     };
@@ -98,11 +97,6 @@ public class MainActivity
             startForegroundService(serviceIntent);
         } else {
             startService(serviceIntent);
-        }
-        if(messenger!=null){
-            Log.d("d--mua--testxx","ekta service pawa geche");
-        }else{
-            Log.d("d--mua--testxx","kothao keo nei");
         }
     }
 
@@ -271,5 +265,13 @@ public class MainActivity
     @Override
     public void incomingMessage(String address, String message) {
         viewModel.insertChat(address,message,true);
+    }
+
+    @Override
+    public void outgoingMessage(String address, String message) {
+        if(messenger!=null){
+            Log.d("d--mua--test",address);
+            Log.d("d--mua--test",message);
+        }
     }
 }
