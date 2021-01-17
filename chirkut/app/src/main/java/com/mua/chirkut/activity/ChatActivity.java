@@ -1,6 +1,11 @@
 package com.mua.chirkut.activity;
 
+import android.content.ComponentName;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.view.View;
 import android.widget.Toast;
 
@@ -32,6 +37,18 @@ public class ChatActivity extends AppCompatActivity {
 
     private RecyclerView mRvChat;
     private ChatAdapter mChatAdapter;
+
+
+    private Messenger messenger;
+    private ServiceConnection mConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            messenger = new Messenger(service);
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            messenger = null;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,10 +105,19 @@ public class ChatActivity extends AppCompatActivity {
 
     void initSend(){
         mBinding.btnSend.setOnClickListener(v -> {
+            String messageString = mBinding.etMessage.getText().toString();
             //todo:fix hardcoded
-            viewModel.insert("192.168.0.108",mBinding.etMessage.getText().toString());
+            viewModel.insert("192.168.0.108",messageString);
             mBinding.etMessage.setText("");
-            //todo:send to client
+            if(messenger!=null){
+                android.os.Message message
+                        = android.os.Message.obtain(null,0,messageString);
+                try {
+                    messenger.send(message);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
         });
     }
 

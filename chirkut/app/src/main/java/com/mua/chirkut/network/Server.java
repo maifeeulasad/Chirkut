@@ -20,19 +20,23 @@ public class Server
     private final Map<String, Socket> socketMapping = new HashMap<>();
     private final ServerIncomingConnection serverIncomingConnection;
     private final IncomingMessageListener incomingMessageListener;
+    private final IncomingConnectionListener incomingConnectionListener;
 
-    private Server(IncomingMessageListener incomingMessageListener) throws IOException {
+    private Server(IncomingMessageListener incomingMessageListener
+            ,IncomingConnectionListener incomingConnectionListener) throws IOException {
         serverSocket = new ServerSocket(Default.PORT);
         serverIncomingConnection = new ServerIncomingConnection(this, this);
         this.incomingMessageListener = incomingMessageListener;
+        this.incomingConnectionListener = incomingConnectionListener;
     }
 
-    public static Server getServer(IncomingMessageListener incomingMessageListener) {
+    public static Server getServer(
+            IncomingMessageListener incomingMessageListener,
+            IncomingConnectionListener incomingConnectionListener) {
         if (server == null) {
             try {
-                server = new Server(incomingMessageListener);
-            } catch (Exception ignored) {
-            }
+                server = new Server(incomingMessageListener,incomingConnectionListener);
+            } catch (Exception ignored) { }
         }
         new Thread(server.serverIncomingConnection).start();
         new Thread(Server.server).start();
@@ -77,5 +81,6 @@ public class Server
     @Override
     public void incomingSocket(Socket socket) {
         socketMapping.put(socket.getInetAddress().getHostAddress(), socket);
+        incomingConnectionListener.incomingSocket(socket);
     }
 }
