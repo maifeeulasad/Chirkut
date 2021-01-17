@@ -119,7 +119,10 @@ public class MainActivity
     }
 
     void init() {
-        bindService(getIntent(), mConnection, Context.BIND_IMPORTANT);
+        bindService(
+                new Intent(this, MessagingService.class),
+                mConnection,
+                Context.BIND_IMPORTANT);
 
         mIntentFilter = new IntentFilter();
 
