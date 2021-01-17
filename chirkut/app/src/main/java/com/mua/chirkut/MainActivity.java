@@ -44,7 +44,7 @@ public class MainActivity
         extends AppCompatActivity
         implements P2PConnectionListener, P2PDeviceClickListener, IncomingMessageListener{
 
-    private final int MAX_CONNECTION_TRY = 5;
+    private final int MAX_CONNECTION_TRY = 100;
     private int connectionRetryCounter = 0;
     private WifiP2pManager mManager;
     private WifiP2pManager.Channel mChannel;
@@ -67,7 +67,7 @@ public class MainActivity
         mBinding.setLifecycleOwner(this);
 
         init();
-        startService();
+        //startService();
         initReceiver();
         initReceiveMessageBroadcast();
         //todo: disable next line - testing purpose
@@ -148,6 +148,23 @@ public class MainActivity
                 );
     }
 
+    void completeExit(){
+        Toast.makeText(this,"System will exit completely now",Toast.LENGTH_LONG).show();
+        new Thread(){
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2*1000);
+                } catch (Exception ignored) { }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    finishAndRemoveTask();
+                }else{
+                    finishAffinity();
+                }
+                System.exit(-1);
+            }
+        }.start();
+    }
 
     @SuppressLint("MissingPermission")
     public void startDiscovery() {
@@ -160,16 +177,14 @@ public class MainActivity
                     @Override
                     public void onFailure(int reasonCode) {
                         if(connectionRetryCounter == MAX_CONNECTION_TRY){
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                finishAndRemoveTask();
-                            }else{
-                                finishAffinity();
-                            }
-                            System.exit(-1);
-                        } else if (connectionRetryCounter < MAX_CONNECTION_TRY) {
+                            //completeExit();
+                        }
+                        if (connectionRetryCounter < MAX_CONNECTION_TRY) {
                             Toast
                                     .makeText(MainActivity.this,
-                                            "P2P failed, " + connectionRetryCounter + " times. Retrying",
+                                            "P2P failed, " + connectionRetryCounter + " times. Retrying"
+                                                    +"\n"
+                                                    +"Failure code " + reasonCode,
                                             Toast.LENGTH_LONG)
                                     .show();
                             startDiscovery();
