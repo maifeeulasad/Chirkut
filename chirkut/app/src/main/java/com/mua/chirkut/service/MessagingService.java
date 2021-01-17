@@ -6,9 +6,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.Messenger;
+import android.text.format.Formatter;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -73,9 +75,14 @@ public class MessagingService
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0);
+
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        String ipAddress = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
+
+
         Notification notification = new NotificationCompat.Builder(this, ID)
                 .setContentTitle(getString(R.string.app_name))
-                .setContentText("Server Running in Foreground")
+                .setContentText("Server Running in "+ipAddress)
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentIntent(pendingIntent)
                 .build();
