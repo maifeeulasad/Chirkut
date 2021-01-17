@@ -23,6 +23,7 @@ import com.mua.chirkut.BuildConfig;
 import com.mua.chirkut.R;
 import com.mua.chirkut.adapter.ChatAdapter;
 import com.mua.chirkut.databinding.ActivityChatBinding;
+import com.mua.chirkut.listener.OutgoingMessageListener;
 import com.mua.chirkut.model.Message;
 import com.mua.chirkut.network.Client;
 import com.mua.chirkut.network.Server;
@@ -32,7 +33,8 @@ import com.mua.chirkut.viewmodel.ChatViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity
+        extends AppCompatActivity {
 
     private ActivityChatBinding mBinding;
     private ChatViewModel viewModel;
@@ -46,7 +48,6 @@ public class ChatActivity extends AppCompatActivity {
     private Messenger messenger;
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
-            Log.d("d--mua--net-test","paise");
             messenger = new Messenger(service);
         }
 
@@ -119,6 +120,9 @@ public class ChatActivity extends AppCompatActivity {
     void initSend(){
         mBinding.btnSend.setOnClickListener(v -> {
             String messageString = mBinding.etMessage.getText().toString();
+            if(messageString.trim().equals("")){
+                return;
+            }
             //todo:fix hardcoded
             viewModel.insert("192.168.0.108",messageString);
             mBinding.etMessage.setText("");
@@ -140,13 +144,9 @@ public class ChatActivity extends AppCompatActivity {
         mRvChat.setAdapter(mChatAdapter);
         mRvChat.setLayoutManager(new LinearLayoutManager(this));
 
-        viewModel.messages.observe(this, new Observer<List<com.mua.chirkut.entity.Message>>() {
-            @Override
-            public void onChanged(List<com.mua.chirkut.entity.Message> messages) {
-                mChatAdapter.setMessageList(messages);
-                mBinding.rvChat.scrollToPosition(messages.size() - 1);
-            }
+        viewModel.messages.observe(this, messages -> {
+            mChatAdapter.setMessageList(messages);
+            mBinding.rvChat.scrollToPosition(messages.size() - 1);
         });
     }
-
 }

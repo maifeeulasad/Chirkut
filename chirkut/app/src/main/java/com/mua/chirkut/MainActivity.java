@@ -42,7 +42,7 @@ import com.mua.chirkut.viewmodel.MainViewModel;
 
 public class MainActivity
         extends AppCompatActivity
-        implements P2PConnectionListener, P2PDeviceClickListener, IncomingMessageListener, OutgoingMessageListener {
+        implements P2PConnectionListener, P2PDeviceClickListener, IncomingMessageListener{
 
     //todo: change the value
     private final int MAX_CONNECTION_TRY = 0;
@@ -57,22 +57,6 @@ public class MainActivity
 
     private P2PListAdapter mP2PListAdapter;
     private RecyclerView mRvP2PList;
-
-
-
-    private Messenger messenger;
-    private final ServiceConnection mConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            messenger = new Messenger(service);
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            messenger = null;
-        }
-    };
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,10 +97,6 @@ public class MainActivity
     }
 
     void init() {
-        bindService(
-                new Intent(this, MessagingService.class),
-                mConnection,
-                Context.BIND_IMPORTANT);
 
         mIntentFilter = new IntentFilter();
 
@@ -265,13 +245,5 @@ public class MainActivity
     @Override
     public void incomingMessage(String address, String message) {
         viewModel.insertChat(address,message,true);
-    }
-
-    @Override
-    public void outgoingMessage(String address, String message) {
-        if(messenger!=null){
-            Log.d("d--mua--test",address);
-            Log.d("d--mua--test",message);
-        }
     }
 }

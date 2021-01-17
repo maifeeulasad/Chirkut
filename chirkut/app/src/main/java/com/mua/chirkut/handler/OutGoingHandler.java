@@ -3,6 +3,8 @@ package com.mua.chirkut.handler;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -18,7 +20,12 @@ public class OutGoingHandler extends Handler {
 
     @Override
     public void handleMessage(@NonNull Message msg) {
-        //todo:fix hardcoded
-        outgoingMessageListener.outgoingMessage("192.168.0.101",msg.obj.toString());
+        if(msg.what!=0){
+            super.handleMessage(msg);
+        }else{
+            //Log.d("d--mua--net-message",msg.obj.toString());
+            //todo:fix hardcoded
+            outgoingMessageListener.outgoingMessage("192.168.0.101",msg.obj.toString());
+        }
     }
 }
