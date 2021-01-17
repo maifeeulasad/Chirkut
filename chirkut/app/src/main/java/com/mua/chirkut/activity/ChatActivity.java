@@ -47,6 +47,7 @@ public class ChatActivity extends AppCompatActivity {
         //initMessageTest();
 
         initServerClient();
+        initSend();
     }
 
     void setTitle(String title){
@@ -83,6 +84,15 @@ public class ChatActivity extends AppCompatActivity {
 
     void initIp(){
 
+    }
+
+    void initSend(){
+        mBinding.btnSend.setOnClickListener(v -> {
+            //todo:fix hardcoded
+            viewModel.insert("192.168.0.108",mBinding.etMessage.getText().toString());
+            mBinding.etMessage.setText("");
+            //todo:send to client
+        });
     }
 
     void initList(){

@@ -22,6 +22,12 @@ public class ChatViewModel extends AndroidViewModel {
     public ChatViewModel(@NonNull Application application) {
         super(application);
         messageRepository = new MessageRepository(application);
+        //todo:fix hardcoded
         messages = messageRepository.getAllByAddress("192.168.0.108");
     }
+
+    public void insert(String address,String message){
+        messageRepository.insert(new Message(address,message,false));
+    }
+
 }
