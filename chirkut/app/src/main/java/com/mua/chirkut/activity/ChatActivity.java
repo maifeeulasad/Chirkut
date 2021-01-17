@@ -93,15 +93,7 @@ public class ChatActivity
             val = getIntent().getExtras().getString("GROUP_OWNER_IP");
         }catch (Exception ignored){ }
 
-        if(val.equals("")){
-            //threads.add(new Server());
-            Toast.makeText(this,"server only",Toast.LENGTH_LONG).show();
-        }else{
-            setTitle(val);
-            //threads.add(new Server());
-            //threads.add(new Client(val));
-            Toast.makeText(this,"server + client",Toast.LENGTH_LONG).show();
-        }
+        setTitle(val);
     }
 
     void initMessageTest(){

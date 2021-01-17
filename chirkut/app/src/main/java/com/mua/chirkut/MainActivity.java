@@ -44,8 +44,7 @@ public class MainActivity
         extends AppCompatActivity
         implements P2PConnectionListener, P2PDeviceClickListener, IncomingMessageListener{
 
-    //todo: change the value
-    private final int MAX_CONNECTION_TRY = 0;
+    private final int MAX_CONNECTION_TRY = 5;
     private int connectionRetryCounter = 0;
     private WifiP2pManager mManager;
     private WifiP2pManager.Channel mChannel;
@@ -72,7 +71,7 @@ public class MainActivity
         initReceiver();
         initReceiveMessageBroadcast();
         //todo: disable next line - testing purpose
-        testMessage();
+        //testMessage();
     }
 
     void startService() {
@@ -142,12 +141,11 @@ public class MainActivity
     }
 
     public void startListenIncoming() {
-        mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
-            @Override
-            public void onConnectionInfoAvailable(WifiP2pInfo info) {
-                Log.d("d--mua-lp", info.groupOwnerAddress + " ip address");
-            }
-        });
+        mManager
+                .requestConnectionInfo(mChannel,
+                        info ->
+                                Log.d("d--mua-lp", info.groupOwnerAddress + " ip address")
+                );
     }
 
 
@@ -161,7 +159,14 @@ public class MainActivity
 
                     @Override
                     public void onFailure(int reasonCode) {
-                        if (connectionRetryCounter < MAX_CONNECTION_TRY) {
+                        if(connectionRetryCounter == MAX_CONNECTION_TRY){
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                finishAndRemoveTask();
+                            }else{
+                                finishAffinity();
+                            }
+                            System.exit(-1);
+                        } else if (connectionRetryCounter < MAX_CONNECTION_TRY) {
                             Toast
                                     .makeText(MainActivity.this,
                                             "P2P failed, " + connectionRetryCounter + " times. Retrying",
