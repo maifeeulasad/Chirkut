@@ -12,64 +12,77 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="20dp"
         android:orientation="vertical"
+        android:padding="20dp"
         tools:context=".MainActivity">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
 
             <TextView
-                android:text="Server status : "
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="Server status : " />
 
             <TextView
-                android:text="@{main.serverStatus.toString()}"
                 android:id="@+id/tv_server_status"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="@{main.serverStatus.toString()}" />
 
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/sw_server_toggle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
 
         </LinearLayout>
 
+
+        <Button
+            android:id="@+id/btn_manually_connect"
+            visibility="@{main.serverStatus}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="Manually Connect"
+            android:visibility="gone" />
+
         <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:visibility="invisible">
 
             <TextView
-                android:text="P2P status : "
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="P2P status : " />
+
             <TextView
-                android:textStyle="bold"
-                android:text="@{main.p2pStatus}"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="@{main.p2pStatus}"
+                android:textStyle="bold" />
 
 
         </LinearLayout>
 
 
         <androidx.core.widget.ContentLoadingProgressBar
-            android:indeterminate="true"
             android:id="@+id/pb_loading"
-            android:scrollbarStyle="insideInset"
             style="?android:attr/progressBarStyleHorizontal"
-            android:visibility="visible"
             android:layout_width="match_parent"
-            android:layout_height="8dp"/>
+            android:layout_height="8dp"
+            android:layout_marginBottom="20dp"
+            android:indeterminate="true"
+            android:scrollbarStyle="insideInset"
+            android:visibility="visible" />
 
 
         <androidx.recyclerview.widget.RecyclerView

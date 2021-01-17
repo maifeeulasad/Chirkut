@@ -18,7 +18,10 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.util.Log;
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -71,6 +74,7 @@ public class MainActivity
         initReceiver();
         initReceiveMessageBroadcast();
         initServiceToggle();
+        initManualConnect();
         //startService();
         //todo: disable next line - testing purpose
         //testMessage();
@@ -88,6 +92,28 @@ public class MainActivity
                     killService();
                 }
             }
+        });
+    }
+
+    void initManualConnect(){
+        final EditText manualAddress = new EditText(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        manualAddress.setLayoutParams(lp);
+
+
+        mBinding.btnManuallyConnect.setOnClickListener(v -> {
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Manually connect to a device")
+                    .setMessage("Thousand apologies from MUA")
+                    .setView(manualAddress)
+                    .setPositiveButton("Yes", (dialogInterface, i) ->
+                            openChat(manualAddress.getText().toString())
+                    )
+                    .setNegativeButton("Cancel",(d,i)->{})
+                    .show();
         });
     }
 
