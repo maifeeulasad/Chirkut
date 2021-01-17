@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -80,11 +81,23 @@ public class ChatActivity extends AppCompatActivity {
         );
     }
 
+    void initIp(){
+
+    }
+
     void initList(){
         mChatAdapter = new ChatAdapter();
         mRvChat = mBinding.rvChat;
         mRvChat.setAdapter(mChatAdapter);
         mRvChat.setLayoutManager(new LinearLayoutManager(this));
+
+        viewModel.messages.observe(this, new Observer<List<com.mua.chirkut.entity.Message>>() {
+            @Override
+            public void onChanged(List<com.mua.chirkut.entity.Message> messages) {
+                mChatAdapter.setMessageList(messages);
+                mBinding.rvChat.scrollToPosition(messages.size() - 1);
+            }
+        });
     }
 
 }

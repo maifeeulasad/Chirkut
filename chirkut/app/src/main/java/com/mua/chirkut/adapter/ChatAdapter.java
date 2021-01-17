@@ -27,6 +27,15 @@ public class ChatAdapter
         notifyItemRangeChanged(messageList.size()-1,1);
     }
 
+
+    public void setMessageList(List<com.mua.chirkut.entity.Message> messageList){
+        this.messageList.clear();
+        for(com.mua.chirkut.entity.Message message:messageList){
+            this.messageList.add(new Message(message.getMessage(),message.getIncoming(),message.getAddress()));
+        }
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ChatAdapter.AppUsageListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
