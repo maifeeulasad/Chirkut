@@ -135,7 +135,12 @@ public class MainActivity
 
             @Override
             public void onFailure(int reason) {
-                Toast.makeText(MainActivity.this, "Force closing may resolve this issue.", Toast.LENGTH_LONG).show();
+                Toast
+                        .makeText(
+                                MainActivity.this,
+                                "Force closing may resolve this issue.",
+                                Toast.LENGTH_LONG)
+                        .show();
             }
         });
     }
@@ -176,9 +181,6 @@ public class MainActivity
 
                     @Override
                     public void onFailure(int reasonCode) {
-                        if(connectionRetryCounter == MAX_CONNECTION_TRY){
-                            //completeExit();
-                        }
                         if (connectionRetryCounter < MAX_CONNECTION_TRY) {
                             Toast
                                     .makeText(MainActivity.this,
@@ -189,6 +191,8 @@ public class MainActivity
                                     .show();
                             startDiscovery();
                             connectionRetryCounter++;
+                        }else{
+                            completeExit();
                         }
                     }
                 }
