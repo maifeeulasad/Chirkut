@@ -56,6 +56,10 @@ public class MessagingService
         return messenger.getBinder();
     }
 
+    public MessagingService getService(){
+        return this;
+    }
+
     private void startInForeground() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(

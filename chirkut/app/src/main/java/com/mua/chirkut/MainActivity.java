@@ -2,9 +2,11 @@ package com.mua.chirkut;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -13,6 +15,8 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Messenger;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -39,7 +43,8 @@ public class MainActivity
         extends AppCompatActivity
         implements P2PConnectionListener, P2PDeviceClickListener, IncomingMessageListener {
 
-    private final int MAX_CONNECTION_TRY = 5;
+    //todo: change the value
+    private final int MAX_CONNECTION_TRY = 0;
     private int connectionRetryCounter = 0;
     private WifiP2pManager mManager;
     private WifiP2pManager.Channel mChannel;
@@ -52,6 +57,24 @@ public class MainActivity
     private P2PListAdapter mP2PListAdapter;
     private RecyclerView mRvP2PList;
 
+
+
+    private Messenger messenger;
+    private final ServiceConnection mConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            Log.d("d--mua--test","ok?");
+            messenger = new Messenger(service);
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            Log.d("d--mua--test","not ok?");
+            messenger = null;
+        }
+    };
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,12 +84,12 @@ public class MainActivity
         mBinding.setMain(viewModel);
         mBinding.setLifecycleOwner(this);
 
-        //todo: disable next line - testing purpose
-        testMessage();
         init();
         startService();
         initReceiver();
         initReceiveMessageBroadcast();
+        //todo: disable next line - testing purpose
+        //testMessage();
     }
 
     void startService() {
@@ -75,6 +98,11 @@ public class MainActivity
             startForegroundService(serviceIntent);
         } else {
             startService(serviceIntent);
+        }
+        if(messenger!=null){
+            Log.d("d--mua--testxx","ekta service pawa geche");
+        }else{
+            Log.d("d--mua--testxx","kothao keo nei");
         }
     }
 
@@ -91,6 +119,8 @@ public class MainActivity
     }
 
     void init() {
+        bindService(getIntent(), mConnection, Context.BIND_IMPORTANT);
+
         mIntentFilter = new IntentFilter();
 
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);

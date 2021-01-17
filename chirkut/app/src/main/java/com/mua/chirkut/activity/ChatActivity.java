@@ -23,6 +23,7 @@ import com.mua.chirkut.databinding.ActivityChatBinding;
 import com.mua.chirkut.model.Message;
 import com.mua.chirkut.network.Client;
 import com.mua.chirkut.network.Server;
+import com.mua.chirkut.service.MessagingService;
 import com.mua.chirkut.viewmodel.ChatViewModel;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
     private Messenger messenger;
-    private ServiceConnection mConnection = new ServiceConnection() {
+    private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             messenger = new Messenger(service);
         }
@@ -60,7 +61,7 @@ public class ChatActivity extends AppCompatActivity {
         mBinding.setLifecycleOwner(this);
 
         initList();
-        //todo: disable next line - testing purpose
+        //todo: disable next line - testing purpose only
         //initMessageTest();
 
         initServerClient();
