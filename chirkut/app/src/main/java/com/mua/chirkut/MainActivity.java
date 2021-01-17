@@ -48,7 +48,7 @@ public class MainActivity
         extends AppCompatActivity
         implements P2PConnectionListener, P2PDeviceClickListener, IncomingMessageListener{
 
-    private final int MAX_CONNECTION_TRY = 100;
+    private final int MAX_CONNECTION_TRY = 2;
     private int connectionRetryCounter = 0;
     private WifiP2pManager mManager;
     private WifiP2pManager.Channel mChannel;

@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -106,7 +107,7 @@ public class MessagingService
         if (client != null) {
             Toast
                     .makeText(
-                            MessagingService.this.getApplicationContext(),
+                            getApplicationContext(),
                             message,
                             Toast.LENGTH_LONG)
                     .show();
@@ -119,6 +120,7 @@ public class MessagingService
         String address = socket.getInetAddress().getHostAddress();
         try {
             clientMapping.put(address, new Client(address));
+            Log.d("d--mua--net-test",address);
         } catch (IOException ignored) { }
     }
 
