@@ -1,11 +1,14 @@
 package com.mua.chirkut.activity;
 
 import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -43,6 +46,7 @@ public class ChatActivity extends AppCompatActivity {
     private Messenger messenger;
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
+            Log.d("d--mua--net-test","paise");
             messenger = new Messenger(service);
         }
 
@@ -66,6 +70,14 @@ public class ChatActivity extends AppCompatActivity {
 
         initServerClient();
         initSend();
+        bindService();
+    }
+
+    void bindService(){
+        bindService(
+                new Intent(this, MessagingService.class),
+                mConnection,
+                Context.BIND_IMPORTANT);
     }
 
     void setTitle(String title){

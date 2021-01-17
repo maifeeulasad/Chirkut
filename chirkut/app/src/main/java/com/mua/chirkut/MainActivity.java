@@ -88,7 +88,7 @@ public class MainActivity
         initReceiver();
         initReceiveMessageBroadcast();
         //todo: disable next line - testing purpose
-        //testMessage();
+        testMessage();
     }
 
     void startService() {
