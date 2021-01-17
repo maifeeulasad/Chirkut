@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.util.Log;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -67,11 +68,27 @@ public class MainActivity
         mBinding.setLifecycleOwner(this);
 
         init();
-        //startService();
         initReceiver();
         initReceiveMessageBroadcast();
+        initServiceToggle();
+        //startService();
         //todo: disable next line - testing purpose
         //testMessage();
+    }
+
+
+    void initServiceToggle(){
+        mBinding.swServerToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                viewModel.serverStatus.postValue(isChecked);
+                if(isChecked){
+                    startService();
+                }else{
+                    killService();
+                }
+            }
+        });
     }
 
     void startService() {
@@ -81,6 +98,11 @@ public class MainActivity
         } else {
             startService(serviceIntent);
         }
+    }
+
+    void killService(){
+        Intent serviceIntent = new Intent(this, MessagingService.class);
+        stopService(serviceIntent);
     }
 
 
@@ -192,7 +214,7 @@ public class MainActivity
                             startDiscovery();
                             connectionRetryCounter++;
                         }else{
-                            completeExit();
+                            //completeExit();
                         }
                     }
                 }

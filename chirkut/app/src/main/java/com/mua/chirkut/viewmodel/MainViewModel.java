@@ -12,6 +12,7 @@ import com.mua.chirkut.repository.MessageRepository;
 public class MainViewModel extends AndroidViewModel {
 
     public MutableLiveData<String> p2pStatus = new MutableLiveData<>("");
+    public MutableLiveData<Boolean> serverStatus = new MutableLiveData<>(false);
     private final MessageRepository messageRepository;
 
     public MainViewModel(@NonNull Application application) {
