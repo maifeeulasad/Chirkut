@@ -80,6 +80,14 @@ dependencies {
     // --- Kotlin coroutines ---
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
 
+    // --- Room (used by existing chat persistence) ---
+    implementation 'androidx.room:room-runtime:2.6.1'
+    annotationProcessor 'androidx.room:room-compiler:2.6.1'
+
+    // --- RxJava (used by existing chat flow) ---
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
+
     // --- Test ---
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
