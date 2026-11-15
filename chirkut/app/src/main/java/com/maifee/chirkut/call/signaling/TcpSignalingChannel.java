@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * TCP implementation of {@link SignalingChannel}. Call setup/teardown is
  * reliable but kept off the media (UDP) plane.
+ * @author Maifee Ul Asad
  */
 public final class TcpSignalingChannel implements SignalingChannel {
 

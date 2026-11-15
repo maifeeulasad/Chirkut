@@ -4,7 +4,10 @@ import android.content.Context
 import com.mua.minidb.EntityStore
 import com.mua.minidb.entityStore
 
-/** Thin repository around the {@link ChirkutMessage} minidb store. */
+/**
+ * Thin repository around the {@link ChirkutMessage} minidb store.
+ * @author Maifee Ul Asad
+ */
 class MessagesRepository(context: Context) {
 
     private val store: EntityStore<ChirkutMessage> =

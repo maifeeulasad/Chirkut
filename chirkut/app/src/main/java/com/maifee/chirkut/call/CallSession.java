@@ -18,6 +18,7 @@ import java.net.InetAddress;
  * One peer-to-peer call. Owns signaling + media + audio pipelines and drives
  * the {@link CallState} machine. Collaborators are injected so the class is
  * transport-agnostic and easy to test.
+ * @author Maifee Ul Asad
  */
 public final class CallSession implements SignalingListener {
 

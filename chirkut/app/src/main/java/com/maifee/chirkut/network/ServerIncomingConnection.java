@@ -7,6 +7,9 @@ import com.maifee.chirkut.listener.IncomingConnectionListener;
 
 import java.net.Socket;
 
+/**
+ * @author Maifee Ul Asad
+ */
 public class ServerIncomingConnection implements Runnable{
 
     private final Server server;

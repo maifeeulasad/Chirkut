@@ -2,7 +2,10 @@ package com.maifee.chirkut.call.audio;
 
 import android.media.AudioFormat;
 
-/** Immutable audio-pipeline parameters. 16 kHz mono PCM16, 20 ms frames. */
+/**
+ * Immutable audio-pipeline parameters. 16 kHz mono PCM16, 20 ms frames.
+ * @author Maifee Ul Asad
+ */
 public final class AudioConfig {
 
     public static final AudioConfig DEFAULT = new AudioConfig(

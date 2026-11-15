@@ -14,6 +14,7 @@ import java.net.SocketException;
 /**
  * UDP-backed {@link MediaTransport}. Low-latency, best-effort: lost frames are
  * dropped, matching VoIP semantics. Uses a single socket for both directions.
+ * @author Maifee Ul Asad
  */
 public final class UdpMediaTransport implements MediaTransport {
 

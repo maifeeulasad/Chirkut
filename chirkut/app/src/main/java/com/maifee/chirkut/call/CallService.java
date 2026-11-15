@@ -19,6 +19,7 @@ import java.io.IOException;
 /**
  * Foreground service hosting the {@link CallManager}. Needed because capturing
  * the microphone from the background is restricted on API 31+.
+ * @author Maifee Ul Asad
  */
 public final class CallService extends Service {
 

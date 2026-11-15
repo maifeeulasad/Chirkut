@@ -2,6 +2,9 @@ package com.maifee.chirkut.model;
 
 import java.util.Random;
 
+/**
+ * @author Maifee Ul Asad
+ */
 public class Message {
 
     private String message = "";

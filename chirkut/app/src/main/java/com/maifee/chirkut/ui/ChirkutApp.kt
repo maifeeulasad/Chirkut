@@ -16,7 +16,10 @@ import com.maifee.chirkut.ui.screen.HomeScreen
 import com.maifee.velvet.VelvetConfig
 import com.maifee.velvet.component.app.VelvetApp
 
-/** Minimal in-memory navigation; three destinations is not worth a graph. */
+/**
+ * Minimal in-memory navigation; three destinations is not worth a graph.
+ * @author Maifee Ul Asad
+ */
 internal sealed class Route {
     data object Home : Route()
     data class Chat(val peerAddress: String) : Route()

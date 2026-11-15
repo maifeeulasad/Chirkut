@@ -3,6 +3,9 @@ package com.maifee.chirkut.listener;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 
+/**
+ * @author Maifee Ul Asad
+ */
 public interface P2PConnectionListener {
     void updateList(WifiP2pDeviceList peerList);
 

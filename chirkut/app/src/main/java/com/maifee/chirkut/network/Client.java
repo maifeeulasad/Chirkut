@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
  * {@code "host:port"} as the peer address so emulator setups can tunnel
  * the default port. On construction, writes a single {@code HELLO|<me>}
  * handshake line so the receiver can route replies back to us.
+ * @author Maifee Ul Asad
  */
 public class Client {
 

@@ -7,6 +7,7 @@ import com.mua.minidb.MiniDatabase
 /**
  * Single process-wide minidb handle. Entity list is the schema; bumping an
  * entity's `version` triggers a migration pass on next open.
+ * @author Maifee Ul Asad
  */
 object ChirkutDatabase {
     private const val NAME = "chirkut"

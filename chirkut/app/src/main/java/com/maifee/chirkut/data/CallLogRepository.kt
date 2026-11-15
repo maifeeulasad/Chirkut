@@ -4,7 +4,10 @@ import android.content.Context
 import com.mua.minidb.EntityStore
 import com.mua.minidb.entityStore
 
-/** Repository for completed call records. */
+/**
+ * Repository for completed call records.
+ * @author Maifee Ul Asad
+ */
 class CallLogRepository(context: Context) {
 
     private val store: EntityStore<CallLogEntry> =

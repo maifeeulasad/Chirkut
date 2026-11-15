@@ -39,6 +39,9 @@ import com.maifee.velvet.component.button.VelvetButton
 import com.maifee.velvet.component.input.VelvetInput
 import com.maifee.velvet.reactive.rememberReactive
 
+/**
+ * @author Maifee Ul Asad
+ */
 @Composable
 fun ChatScreen(
     peerAddress: String,

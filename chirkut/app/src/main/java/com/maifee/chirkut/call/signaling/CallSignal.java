@@ -3,6 +3,7 @@ package com.maifee.chirkut.call.signaling;
 /**
  * Control-plane signal exchanged between peers. Line-oriented wire format:
  * {@code TYPE|arg1|arg2\n}.
+ * @author Maifee Ul Asad
  */
 public final class CallSignal {
 

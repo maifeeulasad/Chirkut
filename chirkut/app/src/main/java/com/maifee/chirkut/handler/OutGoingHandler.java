@@ -10,6 +10,9 @@ import androidx.annotation.NonNull;
 
 import com.maifee.chirkut.listener.OutgoingMessageListener;
 
+/**
+ * @author Maifee Ul Asad
+ */
 public class OutGoingHandler extends Handler {
 
     private final OutgoingMessageListener outgoingMessageListener;

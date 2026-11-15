@@ -9,6 +9,7 @@ import android.media.AudioTrack;
  * Plays PCM frames fed via {@link #play(byte[], int, int)} through an
  * {@link AudioTrack} in streaming mode. Call {@link #start()} before pushing
  * frames and {@link #stop()} on teardown.
+ * @author Maifee Ul Asad
  */
 public final class AudioPlayer {
 

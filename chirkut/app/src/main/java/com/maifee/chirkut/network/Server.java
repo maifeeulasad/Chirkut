@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * thread per connection. Each reader uses a persistent {@link BufferedReader}
  * (the previous busy-loop re-created one per call and dropped buffered
  * bytes). A readLine returning null closes the peer cleanly.
+ * @author Maifee Ul Asad
  */
 public class Server implements IncomingConnectionListener {
 

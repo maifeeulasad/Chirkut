@@ -14,6 +14,7 @@ import java.io.IOException;
  *
  * Deliberately not a static singleton — {@link com.maifee.chirkut.call.CallService}
  * holds the instance and binds its lifecycle to the foreground service.
+ * @author Maifee Ul Asad
  */
 public final class CallManager {
 

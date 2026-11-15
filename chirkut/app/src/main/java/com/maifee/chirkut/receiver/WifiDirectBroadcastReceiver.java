@@ -12,6 +12,9 @@ import android.util.Log;
 
 import com.maifee.chirkut.listener.P2PConnectionListener;
 
+/**
+ * @author Maifee Ul Asad
+ */
 public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
     private final WifiP2pManager mManager;
     private final WifiP2pManager.Channel mChannel;

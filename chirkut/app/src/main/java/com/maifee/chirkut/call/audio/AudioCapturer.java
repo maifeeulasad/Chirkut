@@ -9,6 +9,7 @@ import android.util.Log;
  * Captures PCM frames from the microphone on its own thread and delivers them
  * to an {@link AudioFrameSink}. Owns its {@link AudioRecord}; safe to start/stop
  * repeatedly across call sessions.
+ * @author Maifee Ul Asad
  */
 public final class AudioCapturer {
 

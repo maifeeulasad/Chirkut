@@ -7,6 +7,9 @@ import android.os.Bundle;
 
 import com.maifee.chirkut.listener.IncomingMessageListener;
 
+/**
+ * @author Maifee Ul Asad
+ */
 public class MessageReceiver extends BroadcastReceiver {
 
     private final IncomingMessageListener incomingMessageListener;

@@ -35,6 +35,9 @@ import com.maifee.velvet.component.input.VelvetInput
 import com.maifee.velvet.component.list.VelvetList
 import com.maifee.velvet.reactive.rememberReactive
 
+/**
+ * @author Maifee Ul Asad
+ */
 @Composable
 fun HomeScreen(
     onOpenChat: (peer: String) -> Unit,

@@ -10,6 +10,7 @@ import java.net.Socket;
  * Accepts inbound signaling TCP connections and hands each one off as its own
  * {@link TcpSignalingChannel}. The channel is then opened with a listener by
  * whatever accepted it (typically the {@code CallManager}).
+ * @author Maifee Ul Asad
  */
 public final class CallSignalingServer {
 

@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
  * - Exposes [send] / [connect] for the UI to drive outgoing wire traffic
  * - Listens for the service's incoming broadcasts, persists them to minidb,
  *   and republishes them through [incoming] for any observer to refresh
+ * @author Maifee Ul Asad
  */
 @SuppressLint("StaticFieldLeak") // appContext only
 object ChirkutMessaging {

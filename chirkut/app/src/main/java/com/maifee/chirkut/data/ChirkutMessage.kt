@@ -11,6 +11,7 @@ import com.mua.minidb.UpdatedAt
  * A single chat message persisted in minidb. One store per peer is overkill
  * here — the [peerAddress] index lets us scope queries without a separate
  * store per conversation.
+ * @author Maifee Ul Asad
  */
 @Entity(store = "messages", version = 1)
 data class ChirkutMessage(

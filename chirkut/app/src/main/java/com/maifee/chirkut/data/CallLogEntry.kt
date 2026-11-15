@@ -6,7 +6,10 @@ import com.mua.minidb.Index
 import com.mua.minidb.KeyStrategy
 import com.mua.minidb.PrimaryKey
 
-/** History row for one completed/failed call. */
+/**
+ * History row for one completed/failed call.
+ * @author Maifee Ul Asad
+ */
 @Entity(store = "call_log", version = 1)
 data class CallLogEntry(
     @PrimaryKey(generate = KeyStrategy.UUID) val id: String? = null,

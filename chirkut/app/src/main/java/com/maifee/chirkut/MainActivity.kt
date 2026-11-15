@@ -14,7 +14,10 @@ import com.maifee.chirkut.messaging.ChirkutMessaging
 import com.maifee.chirkut.service.MessagingService
 import com.maifee.chirkut.ui.ChirkutApp
 
-/** Compose host; the full UI lives under {@link ChirkutApp}. */
+/**
+ * Compose host; the full UI lives under {@link ChirkutApp}.
+ * @author Maifee Ul Asad
+ */
 class MainActivity : ComponentActivity() {
 
     private val permissionsLauncher = registerForActivityResult(

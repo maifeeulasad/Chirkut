@@ -37,6 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * {@link Client} sends on connect, not the raw inbound IP. That lets a
  * peer announce an address reachable from here even when the inbound
  * socket's source IP (a NAT tunnel, say) is not routable back.
+ * @author Maifee Ul Asad
  */
 public class MessagingService
         extends Service
