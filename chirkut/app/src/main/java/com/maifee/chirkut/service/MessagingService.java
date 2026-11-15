@@ -26,13 +26,17 @@ import com.maifee.chirkut.network.Server;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Foreground service that owns one {@link Server} + a map of outbound
- * {@link Client}s to peers. Bound by {@code ChirkutMessaging} for
- * Compose-side send; incoming chat is broadcast as {@link #ACTION_INCOMING}.
+ * {@link Client}s to peers.
+ *
+ * Peer identity comes from the {@code HELLO|<addr>} handshake the remote
+ * {@link Client} sends on connect, not the raw inbound IP. That lets a
+ * peer announce an address reachable from here even when the inbound
+ * socket's source IP (a NAT tunnel, say) is not routable back.
  */
 public class MessagingService
         extends Service
@@ -42,15 +46,18 @@ public class MessagingService
     public static final String EXTRA_PEER = "peer";
     public static final String EXTRA_BODY = "body";
 
+    private static final String HELLO_PREFIX = "HELLO|";
     private static final String CHANNEL_ID = "chirkut.messaging";
     private static final int NOTIFICATION_ID = 42;
     private static final String TAG = "MessagingService";
 
-    private final Map<String, Client> clientMapping = new HashMap<>();
+    /** peerId (as announced via HELLO) -> outbound client */
+    private final Map<String, Client> clientMapping = new ConcurrentHashMap<>();
+    /** inbound socket's raw IP -> peerId learned from its HELLO */
+    private final Map<String, String> peerIdByHost = new ConcurrentHashMap<>();
     private final LocalBinder binder = new LocalBinder();
     private Server server;
 
-    /** Binder surface for in-process callers (Compose bridge). */
     public final class LocalBinder extends Binder {
         public MessagingService service() { return MessagingService.this; }
     }
@@ -75,6 +82,7 @@ public class MessagingService
     public void onDestroy() {
         for (Client c : clientMapping.values()) closeQuietly(c);
         clientMapping.clear();
+        peerIdByHost.clear();
         super.onDestroy();
     }
 
@@ -111,52 +119,64 @@ public class MessagingService
         return Formatter.formatIpAddress(wifi.getConnectionInfo().getIpAddress());
     }
 
-    // --- public API used by the Compose bridge ---
+    // --- public API for the Compose bridge ---
 
-    /** Opens an outbound {@link Client} to [peerAddress] if we don't have one. */
-    public synchronized void connect(String peerAddress) throws IOException {
-        if (clientMapping.containsKey(peerAddress)) return;
-        clientMapping.put(peerAddress, new Client(peerAddress));
+    /** Opens an outbound {@link Client} to [peerId] (host or host:port) if we don't have one. */
+    public synchronized void connect(String peerId) throws IOException {
+        ensureClient(peerId);
     }
 
-    /** Sends [body] to [peerAddress], opening a client on demand. */
-    public synchronized void send(String peerAddress, String body) throws IOException {
-        Client client = clientMapping.get(peerAddress);
-        if (client == null) {
-            client = new Client(peerAddress);
-            clientMapping.put(peerAddress, client);
-        }
-        client.send(body + "\n");
+    /** Sends [body] to [peerId], opening a client on demand. */
+    public synchronized void send(String peerId, String body) throws IOException {
+        ensureClient(peerId).send(body);
     }
 
-    // --- Listener callbacks (used by Server / handlers) ---
+    private Client ensureClient(String peerId) throws IOException {
+        Client existing = clientMapping.get(peerId);
+        if (existing != null) return existing;
+        // Announce ourselves back as the same peerId: in a symmetric setup
+        // (same hostname + port both ways) the peer should dial us the same
+        // way we dial them. Callers that need an asymmetric reply address
+        // can build a Client directly.
+        Client fresh = new Client(peerId, peerId);
+        clientMapping.put(peerId, fresh);
+        return fresh;
+    }
+
+    // --- Listener callbacks (used by Server) ---
 
     @Override
-    public void incomingMessage(String address, String message) {
+    public void incomingMessage(String host, String message) {
         if (message == null || message.isEmpty()) return;
+
+        if (message.startsWith(HELLO_PREFIX)) {
+            String announcedId = message.substring(HELLO_PREFIX.length()).trim();
+            if (announcedId.isEmpty()) return;
+            peerIdByHost.put(host, announcedId);
+            // Eagerly open a reply client so UI can send to this peer without
+            // the user re-entering the address.
+            try { ensureClient(announcedId); } catch (IOException e) {
+                Log.w(TAG, "reply-client open failed for " + announcedId, e);
+            }
+            return;
+        }
+
+        String peerId = peerIdByHost.getOrDefault(host, host);
         Intent intent = new Intent(ACTION_INCOMING)
                 .setPackage(getPackageName())
-                .putExtra(EXTRA_PEER, address)
+                .putExtra(EXTRA_PEER, peerId)
                 .putExtra(EXTRA_BODY, message);
         sendBroadcast(intent);
     }
 
     @Override
     public void incomingSocket(Socket socket) {
-        String address = socket.getInetAddress().getHostAddress();
-        if (address == null) return;
-        try {
-            if (!clientMapping.containsKey(address)) {
-                clientMapping.put(address, new Client(address));
-            }
-        } catch (IOException e) {
-            Log.w(TAG, "return-client failed for " + address, e);
-        }
+        // Reply client is created lazily when we see the sender's HELLO.
     }
 
     @Override
-    public void outgoingMessage(String address, String message) {
-        try { send(address, message); } catch (IOException ignored) { }
+    public void outgoingMessage(String peerId, String message) {
+        try { send(peerId, message); } catch (IOException ignored) { }
     }
 
     private static void closeQuietly(Client c) {
