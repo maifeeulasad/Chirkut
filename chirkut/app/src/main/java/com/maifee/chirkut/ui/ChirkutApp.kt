@@ -1,5 +1,6 @@
 package com.maifee.chirkut.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -9,7 +10,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import com.maifee.chirkut.ui.screen.CallScreen
 import com.maifee.chirkut.ui.screen.ChatScreen
 import com.maifee.chirkut.ui.screen.HomeScreen
@@ -51,6 +51,3 @@ fun ChirkutApp() {
         }
     }
 }
-
-private fun Modifier.background(color: Color): Modifier =
-    this.then(androidx.compose.foundation.background(color))

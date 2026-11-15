@@ -84,11 +84,12 @@ fun ChatScreen(
             VelvetButton(
                 onClick = {
                     val body = draft.value.trim()
-                    if (body.isEmpty()) return@VelvetButton
-                    repo.insert(peer = peerAddress, body = body, outgoing = true)
-                    // TODO: hand off to MessagingService / Server for wire send.
-                    draft.value = ""
-                    refresh()
+                    if (body.isNotEmpty()) {
+                        repo.insert(peer = peerAddress, body = body, outgoing = true)
+                        // TODO: hand off to MessagingService / Server for wire send.
+                        draft.value = ""
+                        refresh()
+                    }
                 },
                 type = ButtonType.Primary,
                 shape = ButtonShape.Circle,
