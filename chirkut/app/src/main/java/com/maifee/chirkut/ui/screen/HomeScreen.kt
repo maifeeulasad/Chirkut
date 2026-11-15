@@ -33,7 +33,7 @@ import com.maifee.velvet.component.button.VelvetButton
 import com.maifee.velvet.component.card.VelvetCard
 import com.maifee.velvet.component.input.VelvetInput
 import com.maifee.velvet.component.list.VelvetList
-import com.maifee.velvet.reactive.rememberBinding
+import com.maifee.velvet.reactive.rememberReactive
 
 @Composable
 fun HomeScreen(
@@ -43,7 +43,7 @@ fun HomeScreen(
     val context = LocalContext.current
     val repo = remember { MessagesRepository(context) }
     var peers by remember { mutableStateOf(emptyList<String>()) }
-    val newPeer = rememberBinding(defaultValue = "")
+    val newPeer = rememberReactive("")
 
     LaunchedEffect(Unit) { peers = repo.recentPeers() }
     LaunchedEffect(Unit) {
@@ -76,6 +76,7 @@ fun HomeScreen(
                     value = newPeer,
                     placeholder = "192.168.49.2",
                     allowClear = true,
+                    onChange = { newPeer.value = it },
                 )
                 Spacer(Modifier.width(8.dp))
                 VelvetButton(

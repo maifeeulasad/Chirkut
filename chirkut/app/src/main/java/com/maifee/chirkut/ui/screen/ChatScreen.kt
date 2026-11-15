@@ -37,7 +37,7 @@ import com.maifee.velvet.component.button.ButtonShape
 import com.maifee.velvet.component.button.ButtonType
 import com.maifee.velvet.component.button.VelvetButton
 import com.maifee.velvet.component.input.VelvetInput
-import com.maifee.velvet.reactive.rememberBinding
+import com.maifee.velvet.reactive.rememberReactive
 
 @Composable
 fun ChatScreen(
@@ -48,7 +48,7 @@ fun ChatScreen(
     val context = LocalContext.current
     val repo = remember(peerAddress) { MessagesRepository(context) }
     var messages by remember { mutableStateOf(emptyList<ChirkutMessage>()) }
-    val draft = rememberBinding(defaultValue = "")
+    val draft = rememberReactive("")
     val listState = rememberLazyListState()
 
     fun refresh() { messages = repo.conversation(peerAddress) }
@@ -89,6 +89,7 @@ fun ChatScreen(
                 value = draft,
                 placeholder = "Message",
                 allowClear = true,
+                onChange = { draft.value = it },
             )
             Spacer(Modifier.width(8.dp))
             VelvetButton(
