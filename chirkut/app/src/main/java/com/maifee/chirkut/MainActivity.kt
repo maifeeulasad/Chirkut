@@ -10,6 +10,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.maifee.chirkut.call.CallService
+import com.maifee.chirkut.messaging.ChirkutMessaging
+import com.maifee.chirkut.service.MessagingService
 import com.maifee.chirkut.ui.ChirkutApp
 
 /** Compose host; the full UI lives under {@link ChirkutApp}. */
@@ -43,10 +45,14 @@ class MainActivity : ComponentActivity() {
 
     private fun startChirkutServices() {
         val callIntent = Intent(this, CallService::class.java)
+        val msgIntent = Intent(this, MessagingService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(callIntent)
+            startForegroundService(msgIntent)
         } else {
             startService(callIntent)
+            startService(msgIntent)
         }
+        ChirkutMessaging.ensureStarted(this)
     }
 }

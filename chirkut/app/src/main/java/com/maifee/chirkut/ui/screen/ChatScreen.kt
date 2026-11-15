@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.maifee.chirkut.data.ChirkutMessage
 import com.maifee.chirkut.data.MessagesRepository
+import com.maifee.chirkut.messaging.ChirkutMessaging
 import com.maifee.mingcute.MingcuteStyle
 import com.maifee.mingcute.compose.MingcuteIcon
 import com.maifee.velvet.component.button.ButtonShape
@@ -52,7 +53,16 @@ fun ChatScreen(
 
     fun refresh() { messages = repo.conversation(peerAddress) }
 
-    LaunchedEffect(peerAddress) { refresh() }
+    LaunchedEffect(peerAddress) {
+        ChirkutMessaging.connect(peerAddress)
+        refresh()
+    }
+
+    LaunchedEffect(peerAddress) {
+        ChirkutMessaging.incoming.collect { arrived ->
+            if (arrived.peer == peerAddress) refresh()
+        }
+    }
 
     Column(Modifier.fillMaxSize()) {
         ChatHeader(peer = peerAddress, onBack = onBack, onCall = onCall)
@@ -86,7 +96,7 @@ fun ChatScreen(
                     val body = draft.value.trim()
                     if (body.isNotEmpty()) {
                         repo.insert(peer = peerAddress, body = body, outgoing = true)
-                        // TODO: hand off to MessagingService / Server for wire send.
+                        ChirkutMessaging.send(peerAddress, body)
                         draft.value = ""
                         refresh()
                     }
