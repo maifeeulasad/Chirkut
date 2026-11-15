@@ -1,53 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mua.chirkut">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-feature android:name="android.hardware.wifi.direct" />
+    <uses-feature android:name="android.hardware.wifi.direct" android:required="true" />
+    <uses-feature android:name="android.hardware.microphone" android:required="true" />
 
-    <permission android:name="android.permission.READ_CONTACTS" />
-    <permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <permission android:name="android.permission.INTERNET" />
-    <permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <permission android:name="android.permission.RECORD_AUDIO" />
-    <permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <permission android:name="android.permission.READ_PHONE_STATE" />
-    <permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <permission android:name="android.permission.FOREGROUND_SERVICE" />
-
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <!-- Wi-Fi Direct peer discovery: FINE_LOCATION up to API 32, NEARBY_WIFI_DEVICES from 33+. -->
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:usesPermissionFlags="neverForLocation"
+        tools:targetApi="33" />
 
     <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false"
+        android:icon="@mipmap/chirkut_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/chirkut_icon_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Chirkut">
-        <activity android:name=".activity.ChatActivity"/>
-        <activity android:name=".MainActivity">
+        android:theme="@style/Theme.Chirkut"
+        tools:targetApi="34">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:configChanges="orientation|screenSize|keyboardHidden|uiMode">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".service.MessagingService"/>
+
+        <activity
+            android:name=".activity.ChatActivity"
+            android:exported="false" />
+
+        <service
+            android:name=".service.MessagingService"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
+
+        <service
+            android:name=".call.CallService"
+            android:exported="false"
+            android:foregroundServiceType="microphone|connectedDevice" />
     </application>
 
 </manifest>
