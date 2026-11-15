@@ -46,10 +46,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activity.ChatActivity"
-            android:exported="false" />
-
         <service
             android:name=".service.MessagingService"
             android:exported="false"
