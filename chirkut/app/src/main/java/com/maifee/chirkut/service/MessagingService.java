@@ -7,19 +7,17 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
+import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.Messenger;
 import android.text.format.Formatter;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.maifee.chirkut.MainActivity;
 import com.maifee.chirkut.R;
-import com.maifee.chirkut.handler.OutGoingHandler;
 import com.maifee.chirkut.listener.IncomingConnectionListener;
 import com.maifee.chirkut.listener.IncomingMessageListener;
 import com.maifee.chirkut.listener.OutgoingMessageListener;
@@ -31,20 +29,36 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Foreground service that owns one {@link Server} + a map of outbound
+ * {@link Client}s to peers. Bound by {@code ChirkutMessaging} for
+ * Compose-side send; incoming chat is broadcast as {@link #ACTION_INCOMING}.
+ */
 public class MessagingService
         extends Service
         implements IncomingMessageListener, IncomingConnectionListener, OutgoingMessageListener {
 
-    private static final String ID = MessagingService.class.getName();
-    private final Server server;
-    private final Map<String, Client> clientMapping = new HashMap<>();
-    private final OutGoingHandler mOutgoingHandler;
-    private final Messenger messenger;
+    public static final String ACTION_INCOMING = "com.maifee.chirkut.INCOMING_MESSAGE";
+    public static final String EXTRA_PEER = "peer";
+    public static final String EXTRA_BODY = "body";
 
-    public MessagingService() {
-        this.server = Server.getServer(this,this);
-        mOutgoingHandler = new OutGoingHandler(this);
-        messenger = new Messenger(mOutgoingHandler);
+    private static final String CHANNEL_ID = "chirkut.messaging";
+    private static final int NOTIFICATION_ID = 42;
+    private static final String TAG = "MessagingService";
+
+    private final Map<String, Client> clientMapping = new HashMap<>();
+    private final LocalBinder binder = new LocalBinder();
+    private Server server;
+
+    /** Binder surface for in-process callers (Compose bridge). */
+    public final class LocalBinder extends Binder {
+        public MessagingService service() { return MessagingService.this; }
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        server = Server.getServer(this, this);
     }
 
     @Override
@@ -55,79 +69,97 @@ public class MessagingService
 
     @Nullable
     @Override
-    public IBinder onBind(Intent intent) {
-        return messenger.getBinder();
-    }
+    public IBinder onBind(Intent intent) { return binder; }
 
-    public MessagingService getService(){
-        return this;
+    @Override
+    public void onDestroy() {
+        for (Client c : clientMapping.values()) closeQuietly(c);
+        clientMapping.clear();
+        super.onDestroy();
     }
 
     private void startInForeground() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel serviceChannel = new NotificationChannel(
-                    ID,
-                    "Server Running",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(serviceChannel);
-        }
+        createChannel();
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, 0);
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, flags);
 
-        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
-        String ipAddress = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
-
-
-        Notification notification = new NotificationCompat.Builder(this, ID)
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(getString(R.string.app_name))
-                .setContentText("Server Running in "+ipAddress)
-                .setSmallIcon(R.drawable.ic_launcher_background)
-                .setContentIntent(pendingIntent)
+                .setContentText("Chirkut is listening at " + localIp())
+                .setSmallIcon(R.mipmap.chirkut_icon)
+                .setContentIntent(contentIntent)
+                .setOngoing(true)
                 .build();
-        startForeground(1, notification);
+        startForeground(NOTIFICATION_ID, notification);
     }
+
+    private void createChannel() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return;
+        NotificationManager nm = getSystemService(NotificationManager.class);
+        if (nm.getNotificationChannel(CHANNEL_ID) == null) {
+            NotificationChannel ch = new NotificationChannel(
+                    CHANNEL_ID, "Messaging", NotificationManager.IMPORTANCE_LOW);
+            nm.createNotificationChannel(ch);
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    private String localIp() {
+        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        if (wifi == null) return "unknown";
+        return Formatter.formatIpAddress(wifi.getConnectionInfo().getIpAddress());
+    }
+
+    // --- public API used by the Compose bridge ---
+
+    /** Opens an outbound {@link Client} to [peerAddress] if we don't have one. */
+    public synchronized void connect(String peerAddress) throws IOException {
+        if (clientMapping.containsKey(peerAddress)) return;
+        clientMapping.put(peerAddress, new Client(peerAddress));
+    }
+
+    /** Sends [body] to [peerAddress], opening a client on demand. */
+    public synchronized void send(String peerAddress, String body) throws IOException {
+        Client client = clientMapping.get(peerAddress);
+        if (client == null) {
+            client = new Client(peerAddress);
+            clientMapping.put(peerAddress, client);
+        }
+        client.send(body + "\n");
+    }
+
+    // --- Listener callbacks (used by Server / handlers) ---
 
     @Override
     public void incomingMessage(String address, String message) {
-        if (message.equals(""))
-            return;
-
-        Intent intent = new Intent("mua.message");
-        intent.putExtra("address", address);
-        intent.putExtra("message", message);
+        if (message == null || message.isEmpty()) return;
+        Intent intent = new Intent(ACTION_INCOMING)
+                .setPackage(getPackageName())
+                .putExtra(EXTRA_PEER, address)
+                .putExtra(EXTRA_BODY, message);
         sendBroadcast(intent);
-    }
-
-
-    public void sendMessage(String address,String message) throws IOException {
-        Client client = clientMapping.get(address);
-        if (client != null) {
-            Toast
-                    .makeText(
-                            getApplicationContext(),
-                            message,
-                            Toast.LENGTH_LONG)
-                    .show();
-            client.send(message);
-        }
     }
 
     @Override
     public void incomingSocket(Socket socket) {
         String address = socket.getInetAddress().getHostAddress();
+        if (address == null) return;
         try {
-            clientMapping.put(address, new Client(address));
-            Log.d("d--mua--net-test",address);
-        } catch (IOException ignored) { }
+            if (!clientMapping.containsKey(address)) {
+                clientMapping.put(address, new Client(address));
+            }
+        } catch (IOException e) {
+            Log.w(TAG, "return-client failed for " + address, e);
+        }
     }
 
     @Override
     public void outgoingMessage(String address, String message) {
-        try {
-            sendMessage(address, message);
-        } catch (Exception ignored) { }
+        try { send(address, message); } catch (IOException ignored) { }
+    }
+
+    private static void closeQuietly(Client c) {
+        try { if (c != null && c.socket != null) c.socket.close(); } catch (IOException ignored) { }
     }
 }
