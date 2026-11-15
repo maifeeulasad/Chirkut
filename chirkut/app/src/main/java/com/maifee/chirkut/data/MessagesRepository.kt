@@ -2,6 +2,7 @@ package com.maifee.chirkut.data
 
 import android.content.Context
 import com.mua.minidb.EntityStore
+import com.mua.minidb.entityStore
 
 /** Thin repository around the {@link ChirkutMessage} minidb store. */
 class MessagesRepository(context: Context) {

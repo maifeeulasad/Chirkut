@@ -50,20 +50,20 @@ fun CallScreen(
     // the mic foreground permission keeps the pipeline alive on API 31+.
     val manager = remember(peerAddress) {
         CallManager(
-            audioConfig = AudioConfig.DEFAULT,
-            signalingPort = CallDefaults.SIGNALING_PORT,
-            mediaPort = CallDefaults.MEDIA_PORT,
-            listener = object : CallListener {
+            AudioConfig.DEFAULT,
+            CallDefaults.SIGNALING_PORT,
+            CallDefaults.MEDIA_PORT,
+            object : CallListener {
                 override fun onStateChanged(next: CallState) { state = next }
                 override fun onIncomingCall(remoteAddress: String) { }
                 override fun onError(error: Throwable) { }
                 override fun onCallEnded(reason: CallEndReason) {
                     val duration = System.currentTimeMillis() - startedAt
                     callLog.record(
-                        peer = peerAddress,
-                        role = if (incoming) CallRole.CALLEE.name else CallRole.CALLER.name,
-                        outcome = reason.name,
-                        durationMs = duration,
+                        peerAddress,
+                        if (incoming) CallRole.CALLEE.name else CallRole.CALLER.name,
+                        reason.name,
+                        duration,
                     )
                     onEnded()
                 }
