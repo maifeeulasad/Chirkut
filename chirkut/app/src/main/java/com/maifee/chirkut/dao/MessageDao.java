@@ -1,4 +1,4 @@
-package com.mua.chirkut.dao;
+package com.maifee.chirkut.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -6,7 +6,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.mua.chirkut.entity.Message;
+import com.maifee.chirkut.entity.Message;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.mua.chirkut.viewmodel;
+package com.maifee.chirkut.viewmodel;
 
 import android.app.Application;
 
@@ -6,8 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.mua.chirkut.entity.Message;
-import com.mua.chirkut.repository.MessageRepository;
+import com.maifee.chirkut.entity.Message;
+import com.maifee.chirkut.repository.MessageRepository;
 
 public class MainViewModel extends AndroidViewModel {
 

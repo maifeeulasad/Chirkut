@@ -1,4 +1,4 @@
-package com.mua.chirkut.service;
+package com.maifee.chirkut.service;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -17,14 +17,14 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.mua.chirkut.MainActivity;
-import com.mua.chirkut.R;
-import com.mua.chirkut.handler.OutGoingHandler;
-import com.mua.chirkut.listener.IncomingConnectionListener;
-import com.mua.chirkut.listener.IncomingMessageListener;
-import com.mua.chirkut.listener.OutgoingMessageListener;
-import com.mua.chirkut.network.Client;
-import com.mua.chirkut.network.Server;
+import com.maifee.chirkut.MainActivity;
+import com.maifee.chirkut.R;
+import com.maifee.chirkut.handler.OutGoingHandler;
+import com.maifee.chirkut.listener.IncomingConnectionListener;
+import com.maifee.chirkut.listener.IncomingMessageListener;
+import com.maifee.chirkut.listener.OutgoingMessageListener;
+import com.maifee.chirkut.network.Client;
+import com.maifee.chirkut.network.Server;
 
 import java.io.IOException;
 import java.net.Socket;

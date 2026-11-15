@@ -1,4 +1,4 @@
-package com.mua.chirkut.listener;
+package com.maifee.chirkut.listener;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 

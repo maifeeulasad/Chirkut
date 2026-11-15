@@ -1,4 +1,4 @@
-package com.mua.chirkut.listener;
+package com.maifee.chirkut.listener;
 
 public interface IncomingMessageListener {
     void incomingMessage(String address, String message);

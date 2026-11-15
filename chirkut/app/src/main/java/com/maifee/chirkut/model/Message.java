@@ -1,4 +1,4 @@
-package com.mua.chirkut.model;
+package com.maifee.chirkut.model;
 
 import java.util.Random;
 

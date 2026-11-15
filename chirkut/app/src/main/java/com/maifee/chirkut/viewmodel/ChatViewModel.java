@@ -1,4 +1,4 @@
-package com.mua.chirkut.viewmodel;
+package com.maifee.chirkut.viewmodel;
 
 import android.app.Application;
 
@@ -8,8 +8,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.mua.chirkut.entity.Message;
-import com.mua.chirkut.repository.MessageRepository;
+import com.maifee.chirkut.entity.Message;
+import com.maifee.chirkut.repository.MessageRepository;
 
 import java.util.ArrayList;
 import java.util.List;

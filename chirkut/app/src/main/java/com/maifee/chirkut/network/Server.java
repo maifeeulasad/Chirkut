@@ -1,8 +1,8 @@
-package com.mua.chirkut.network;
+package com.maifee.chirkut.network;
 
-import com.mua.chirkut.listener.IncomingConnectionListener;
-import com.mua.chirkut.listener.IncomingMessageListener;
-import com.mua.chirkut.util.Default;
+import com.maifee.chirkut.listener.IncomingConnectionListener;
+import com.maifee.chirkut.listener.IncomingMessageListener;
+import com.maifee.chirkut.util.Default;
 
 import java.io.BufferedReader;
 import java.io.IOException;

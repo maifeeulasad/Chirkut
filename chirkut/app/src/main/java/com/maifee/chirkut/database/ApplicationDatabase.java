@@ -1,4 +1,4 @@
-package com.mua.chirkut.database;
+package com.maifee.chirkut.database;
 
 
 import android.content.Context;
@@ -7,8 +7,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.mua.chirkut.dao.MessageDao;
-import com.mua.chirkut.entity.Message;
+import com.maifee.chirkut.dao.MessageDao;
+import com.maifee.chirkut.entity.Message;
 
 @Database(entities = {Message.class}, version = 1)
 public abstract class ApplicationDatabase extends RoomDatabase {

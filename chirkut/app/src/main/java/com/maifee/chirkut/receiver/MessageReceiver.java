@@ -1,11 +1,11 @@
-package com.mua.chirkut.receiver;
+package com.maifee.chirkut.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.mua.chirkut.listener.IncomingMessageListener;
+import com.maifee.chirkut.listener.IncomingMessageListener;
 
 public class MessageReceiver extends BroadcastReceiver {
 

@@ -6,7 +6,7 @@
 
         <variable
             name="main"
-            type="com.mua.chirkut.viewmodel.MainViewModel" />
+            type="com.maifee.chirkut.viewmodel.MainViewModel" />
     </data>
 
     <LinearLayout

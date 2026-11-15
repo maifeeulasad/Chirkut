@@ -1,4 +1,4 @@
-package com.mua.chirkut.converter;
+package com.maifee.chirkut.converter;
 
 import androidx.room.TypeConverter;
 

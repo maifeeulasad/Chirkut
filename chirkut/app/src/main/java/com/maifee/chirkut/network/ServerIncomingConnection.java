@@ -1,9 +1,9 @@
-package com.mua.chirkut.network;
+package com.maifee.chirkut.network;
 
 
 import android.util.Log;
 
-import com.mua.chirkut.listener.IncomingConnectionListener;
+import com.maifee.chirkut.listener.IncomingConnectionListener;
 
 import java.net.Socket;
 

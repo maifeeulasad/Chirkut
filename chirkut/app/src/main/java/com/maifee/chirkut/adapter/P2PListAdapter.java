@@ -1,4 +1,4 @@
-package com.mua.chirkut.adapter;
+package com.maifee.chirkut.adapter;
 
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
@@ -10,8 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mua.chirkut.R;
-import com.mua.chirkut.listener.P2PDeviceClickListener;
+import com.maifee.chirkut.R;
+import com.maifee.chirkut.listener.P2PDeviceClickListener;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.mua.chirkut;
+package com.maifee.chirkut;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -31,17 +31,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mua.chirkut.activity.ChatActivity;
-import com.mua.chirkut.adapter.P2PListAdapter;
-import com.mua.chirkut.databinding.ActivityMainBinding;
-import com.mua.chirkut.listener.IncomingMessageListener;
-import com.mua.chirkut.listener.OutgoingMessageListener;
-import com.mua.chirkut.listener.P2PConnectionListener;
-import com.mua.chirkut.listener.P2PDeviceClickListener;
-import com.mua.chirkut.receiver.MessageReceiver;
-import com.mua.chirkut.receiver.WifiDirectBroadcastReceiver;
-import com.mua.chirkut.service.MessagingService;
-import com.mua.chirkut.viewmodel.MainViewModel;
+import com.maifee.chirkut.activity.ChatActivity;
+import com.maifee.chirkut.adapter.P2PListAdapter;
+import com.maifee.chirkut.databinding.ActivityMainBinding;
+import com.maifee.chirkut.listener.IncomingMessageListener;
+import com.maifee.chirkut.listener.OutgoingMessageListener;
+import com.maifee.chirkut.listener.P2PConnectionListener;
+import com.maifee.chirkut.listener.P2PDeviceClickListener;
+import com.maifee.chirkut.receiver.MessageReceiver;
+import com.maifee.chirkut.receiver.WifiDirectBroadcastReceiver;
+import com.maifee.chirkut.service.MessagingService;
+import com.maifee.chirkut.viewmodel.MainViewModel;
 
 
 public class MainActivity

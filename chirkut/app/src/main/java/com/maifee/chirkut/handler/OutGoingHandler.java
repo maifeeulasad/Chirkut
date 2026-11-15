@@ -1,4 +1,4 @@
-package com.mua.chirkut.handler;
+package com.maifee.chirkut.handler;
 
 
 import android.os.Handler;
@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.mua.chirkut.listener.OutgoingMessageListener;
+import com.maifee.chirkut.listener.OutgoingMessageListener;
 
 public class OutGoingHandler extends Handler {
 

@@ -1,4 +1,4 @@
-package com.mua.chirkut.activity;
+package com.maifee.chirkut.activity;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -19,16 +19,16 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mua.chirkut.BuildConfig;
-import com.mua.chirkut.R;
-import com.mua.chirkut.adapter.ChatAdapter;
-import com.mua.chirkut.databinding.ActivityChatBinding;
-import com.mua.chirkut.listener.OutgoingMessageListener;
-import com.mua.chirkut.model.Message;
-import com.mua.chirkut.network.Client;
-import com.mua.chirkut.network.Server;
-import com.mua.chirkut.service.MessagingService;
-import com.mua.chirkut.viewmodel.ChatViewModel;
+import com.maifee.chirkut.BuildConfig;
+import com.maifee.chirkut.R;
+import com.maifee.chirkut.adapter.ChatAdapter;
+import com.maifee.chirkut.databinding.ActivityChatBinding;
+import com.maifee.chirkut.listener.OutgoingMessageListener;
+import com.maifee.chirkut.model.Message;
+import com.maifee.chirkut.network.Client;
+import com.maifee.chirkut.network.Server;
+import com.maifee.chirkut.service.MessagingService;
+import com.maifee.chirkut.viewmodel.ChatViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

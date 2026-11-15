@@ -1,4 +1,4 @@
-package com.mua.chirkut;
+package com.maifee.chirkut;
 
 import org.junit.Test;
 

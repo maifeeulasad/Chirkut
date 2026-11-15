@@ -1,6 +1,6 @@
-package com.mua.chirkut.network;
+package com.maifee.chirkut.network;
 
-import com.mua.chirkut.util.Default;
+import com.maifee.chirkut.util.Default;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

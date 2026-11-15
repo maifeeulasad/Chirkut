@@ -1,4 +1,4 @@
-package com.mua.chirkut.receiver;
+package com.maifee.chirkut.receiver;
 
 
 import android.annotation.SuppressLint;
@@ -10,7 +10,7 @@ import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 
-import com.mua.chirkut.listener.P2PConnectionListener;
+import com.maifee.chirkut.listener.P2PConnectionListener;
 
 public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
     private final WifiP2pManager mManager;

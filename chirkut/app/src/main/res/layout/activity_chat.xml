@@ -6,7 +6,7 @@
 
         <variable
             name="chat"
-            type="com.mua.chirkut.viewmodel.ChatViewModel" />
+            type="com.maifee.chirkut.viewmodel.ChatViewModel" />
     </data>
 
 

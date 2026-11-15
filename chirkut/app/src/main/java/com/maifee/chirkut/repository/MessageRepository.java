@@ -1,4 +1,4 @@
-package com.mua.chirkut.repository;
+package com.maifee.chirkut.repository;
 
 
 import android.app.Application;
@@ -6,9 +6,9 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
-import com.mua.chirkut.dao.MessageDao;
-import com.mua.chirkut.database.ApplicationDatabase;
-import com.mua.chirkut.entity.Message;
+import com.maifee.chirkut.dao.MessageDao;
+import com.maifee.chirkut.database.ApplicationDatabase;
+import com.maifee.chirkut.entity.Message;
 
 import java.util.List;
 

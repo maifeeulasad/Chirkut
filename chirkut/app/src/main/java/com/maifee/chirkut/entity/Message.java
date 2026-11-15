@@ -1,4 +1,4 @@
-package com.mua.chirkut.entity;
+package com.maifee.chirkut.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -6,7 +6,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-import com.mua.chirkut.converter.DateConverter;
+import com.maifee.chirkut.converter.DateConverter;
 
 import java.sql.Date;
 

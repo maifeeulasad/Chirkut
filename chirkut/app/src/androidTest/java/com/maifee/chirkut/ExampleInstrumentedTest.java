@@ -1,4 +1,4 @@
-package com.mua.chirkut;
+package com.maifee.chirkut;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.mua.chirkut", appContext.getPackageName());
+        assertEquals("com.maifee.chirkut", appContext.getPackageName());
     }
 }

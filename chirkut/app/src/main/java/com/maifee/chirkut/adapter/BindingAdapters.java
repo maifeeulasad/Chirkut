@@ -1,4 +1,4 @@
-package com.mua.chirkut.adapter;
+package com.maifee.chirkut.adapter;
 
 import android.view.View;
 
