@@ -1,5 +1,6 @@
 package com.maifee.chirkut.ui.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +24,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.maifee.chirkut.data.MessagesRepository
+import com.maifee.chirkut.messaging.ChirkutMessaging
 import com.maifee.mingcute.MingcuteStyle
 import com.maifee.mingcute.compose.MingcuteIcon
 import com.maifee.velvet.component.button.ButtonShape
@@ -44,6 +46,9 @@ fun HomeScreen(
     val newPeer = rememberBinding(defaultValue = "")
 
     LaunchedEffect(Unit) { peers = repo.recentPeers() }
+    LaunchedEffect(Unit) {
+        ChirkutMessaging.incoming.collect { peers = repo.recentPeers() }
+    }
 
     Column(
         Modifier.fillMaxSize().padding(16.dp),
@@ -116,7 +121,9 @@ fun HomeScreen(
             } else {
                 VelvetList(items = peers, bordered = false) { peer ->
                     Row(
-                        Modifier.fillMaxWidth(),
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable { onOpenChat(peer) },
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         MingcuteIcon(
@@ -127,17 +134,12 @@ fun HomeScreen(
                         )
                         Spacer(Modifier.width(12.dp))
                         Text(peer, Modifier.weight(1f))
-                        VelvetButton(
-                            onClick = { onOpenChat(peer) },
-                            type = ButtonType.Text,
-                            icon = {
-                                MingcuteIcon(
-                                    name = "arrow_right",
-                                    contentDescription = null,
-                                    style = MingcuteStyle.LINE,
-                                )
-                            },
-                        ) {}
+                        MingcuteIcon(
+                            name = "arrow_right",
+                            contentDescription = null,
+                            style = MingcuteStyle.LINE,
+                            modifier = Modifier.size(24.dp),
+                        )
                     }
                 }
             }
