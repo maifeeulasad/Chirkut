@@ -152,6 +152,7 @@ public class MessagingService
         if (message.startsWith(HELLO_PREFIX)) {
             String announcedId = message.substring(HELLO_PREFIX.length()).trim();
             if (announcedId.isEmpty()) return;
+            Log.d(TAG, "HELLO from host=" + host + " announces peerId=" + announcedId);
             peerIdByHost.put(host, announcedId);
             // Eagerly open a reply client so UI can send to this peer without
             // the user re-entering the address.
@@ -162,6 +163,7 @@ public class MessagingService
         }
 
         String peerId = peerIdByHost.getOrDefault(host, host);
+        Log.d(TAG, "broadcast incoming peer=" + peerId + " body=" + message);
         Intent intent = new Intent(ACTION_INCOMING)
                 .setPackage(getPackageName())
                 .putExtra(EXTRA_PEER, peerId)

@@ -63,6 +63,7 @@ public class Server implements IncomingConnectionListener {
     public void incomingSocket(Socket socket) {
         String address = socket.getInetAddress().getHostAddress();
         if (address == null) address = "unknown";
+        Log.d(TAG, "accepted socket from " + address);
         socketMapping.put(address, socket);
         incomingConnectionListener.incomingSocket(socket);
         new Thread(new SocketReader(socket, address), "Server-Reader-" + address).start();
@@ -83,6 +84,7 @@ public class Server implements IncomingConnectionListener {
                     new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
+                    Log.d(TAG, "<- " + address + ": " + line);
                     incomingMessageListener.incomingMessage(address, line);
                 }
             } catch (IOException e) {
