@@ -107,7 +107,7 @@ fun ShareScreen(
     DisposableEffect(activity) {
         if (activity != null) {
             NfcReader.enable(activity) { raw ->
-                ConnectInfo.parse(raw)?.let(onOpenChat)
+                ConnectInfo.parse(raw)?.let { onOpenChat(it.peerId) }
             }
         }
         onDispose { if (activity != null) NfcReader.disable(activity) }
