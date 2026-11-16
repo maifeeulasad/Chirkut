@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,7 +29,9 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import com.maifee.chirkut.connect.ChirkutHceService
 import com.maifee.chirkut.connect.ConnectInfo
+import com.maifee.chirkut.connect.NfcReader
 import com.maifee.chirkut.connect.QrCode
 import com.maifee.chirkut.messaging.ChirkutMessaging
 import com.maifee.mingcute.MingcuteStyle
@@ -94,7 +97,20 @@ fun ShareScreen(
         }
         val addr = address ?: return@LaunchedEffect
         val info = ConnectInfo.parse(addr) ?: return@LaunchedEffect
+        ChirkutHceService.payload = info.encode()
         qrBitmap = withContext(Dispatchers.Default) { QrCode.encode(info.encode()) }
+    }
+
+    // While this screen is up, read any NFC tag or phone presented. The
+    // emitter-side HCE service keeps answering independently of this effect.
+    val activity = findActivity(context)
+    DisposableEffect(activity) {
+        if (activity != null) {
+            NfcReader.enable(activity) { raw ->
+                ConnectInfo.parse(raw)?.let(onOpenChat)
+            }
+        }
+        onDispose { if (activity != null) NfcReader.disable(activity) }
     }
 
     Column(
@@ -186,8 +202,9 @@ fun ShareScreen(
 
         VelvetCard(title = "NFC") {
             Text(
-                "Hold your phone to theirs with NFC on. The receiver's Chirkut " +
-                    "will auto-open the chat. (NFC emitter arrives in a follow-up.)",
+                "Hold the back of your phones together. Whoever opened this " +
+                    "screen will emit the address; the other side's reader " +
+                    "picks it up and opens the chat automatically.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -198,4 +215,13 @@ fun ShareScreen(
 private fun copyToClipboard(context: Context, text: String) {
     val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     cm.setPrimaryClip(ClipData.newPlainText("Chirkut address", text))
+}
+
+private fun findActivity(context: Context): android.app.Activity? {
+    var c: Context? = context
+    while (c is android.content.ContextWrapper) {
+        if (c is android.app.Activity) return c
+        c = c.baseContext
+    }
+    return null
 }
