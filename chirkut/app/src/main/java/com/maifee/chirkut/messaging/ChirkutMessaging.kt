@@ -85,6 +85,12 @@ object ChirkutMessaging {
     }
 
     /**
+     * The host:port other devices should dial to reach this one. Null until
+     * the service is bound. Safe to call from the UI thread.
+     */
+    fun listeningAddress(): String? = service?.listeningAddress()
+
+    /**
      * Opens an outbound socket to [peer] if we don't have one. Idempotent.
      * Dispatched to IO because Client.<init> blocks on socket connect.
      */
