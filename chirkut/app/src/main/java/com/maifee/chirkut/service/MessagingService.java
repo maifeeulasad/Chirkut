@@ -95,12 +95,22 @@ public class MessagingService
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(getString(R.string.app_name))
-                .setContentText("Chirkut is listening at " + localIp())
+                .setContentText("Reach me at " + listeningAddress())
                 .setSmallIcon(R.mipmap.chirkut_icon)
                 .setContentIntent(contentIntent)
                 .setOngoing(true)
                 .build();
         startForeground(NOTIFICATION_ID, notification);
+    }
+
+    /**
+     * The {@code host:port} string peers should dial to reach this device. Uses
+     * the port the server actually bound to (which may not be the default when
+     * fallback kicked in).
+     */
+    public String listeningAddress() {
+        int port = server != null ? server.getBoundPort() : com.maifee.chirkut.util.Default.PORT;
+        return localIp() + ":" + port;
     }
 
     private void createChannel() {
