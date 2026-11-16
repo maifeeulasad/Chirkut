@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import com.maifee.chirkut.ui.screen.CallScreen
 import com.maifee.chirkut.ui.screen.ChatScreen
 import com.maifee.chirkut.ui.screen.HomeScreen
+import com.maifee.chirkut.ui.screen.ShareScreen
 import com.maifee.velvet.VelvetConfig
 import com.maifee.velvet.component.app.VelvetApp
 
@@ -22,6 +23,7 @@ import com.maifee.velvet.component.app.VelvetApp
  */
 internal sealed class Route {
     data object Home : Route()
+    data object Share : Route()
     data class Chat(val peerAddress: String) : Route()
     data class Call(val peerAddress: String, val incoming: Boolean) : Route()
 }
@@ -39,6 +41,11 @@ fun ChirkutApp() {
                 Route.Home -> HomeScreen(
                     onOpenChat = { route = Route.Chat(it) },
                     onCall = { route = Route.Call(it, incoming = false) },
+                    onShare = { route = Route.Share },
+                )
+                Route.Share -> ShareScreen(
+                    onBack = { route = Route.Home },
+                    onOpenChat = { route = Route.Chat(it) },
                 )
                 is Route.Chat -> ChatScreen(
                     peerAddress = r.peerAddress,

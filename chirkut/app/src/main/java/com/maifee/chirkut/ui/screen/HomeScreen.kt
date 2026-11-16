@@ -42,6 +42,7 @@ import com.maifee.velvet.reactive.rememberReactive
 fun HomeScreen(
     onOpenChat: (peer: String) -> Unit,
     onCall: (peer: String) -> Unit,
+    onShare: () -> Unit,
 ) {
     val context = LocalContext.current
     val repo = remember { MessagesRepository(context) }
@@ -58,13 +59,17 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         VelvetCard(title = "Chirkut", extra = {
-            MingcuteIcon(
-                name = "group",
-                contentDescription = null,
-                style = MingcuteStyle.LINE,
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
-                modifier = Modifier.size(24.dp),
-            )
+            VelvetButton(
+                onClick = onShare,
+                type = ButtonType.Text,
+                icon = {
+                    MingcuteIcon(
+                        name = "qrcode_2",
+                        contentDescription = "Share",
+                        style = MingcuteStyle.LINE,
+                    )
+                },
+            ) {}
         }) {
             Text(
                 "Peer-to-peer chat and calls. Nothing leaves this device.",

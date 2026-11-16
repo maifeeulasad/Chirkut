@@ -3,6 +3,7 @@ package com.maifee.chirkut.ui.screen
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,8 @@ import com.maifee.mingcute.compose.MingcuteIcon
 import com.maifee.velvet.component.button.ButtonType
 import com.maifee.velvet.component.button.VelvetButton
 import com.maifee.velvet.component.card.VelvetCard
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -54,11 +57,33 @@ import kotlinx.coroutines.withContext
 @Composable
 fun ShareScreen(
     onBack: () -> Unit,
-    onScan: () -> Unit,
+    onOpenChat: (String) -> Unit,
 ) {
     val context = LocalContext.current
     var address by remember { mutableStateOf<String?>(null) }
     var qrBitmap by remember { mutableStateOf<android.graphics.Bitmap?>(null) }
+    var scanError by remember { mutableStateOf<String?>(null) }
+
+    val scanLauncher = rememberLauncherForActivityResult(ScanContract()) { result ->
+        val raw = result?.contents ?: return@rememberLauncherForActivityResult
+        val info = ConnectInfo.parse(raw)
+        if (info != null) {
+            onOpenChat(info.peerId)
+        } else {
+            scanError = "Scanned \"$raw\" doesn't look like a Chirkut address."
+        }
+    }
+
+    fun launchScan() {
+        scanError = null
+        scanLauncher.launch(
+            ScanOptions()
+                .setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+                .setPrompt("Scan a Chirkut QR")
+                .setBeepEnabled(false)
+                .setOrientationLocked(false),
+        )
+    }
 
     LaunchedEffect(Unit) {
         // The service bind can lag the first composition slightly.
@@ -140,7 +165,7 @@ fun ShareScreen(
                     ) { Text("Copy") }
                     Spacer(Modifier.width(12.dp))
                     VelvetButton(
-                        onClick = onScan,
+                        onClick = { launchScan() },
                         type = ButtonType.Primary,
                         icon = {
                             MingcuteIcon(
@@ -150,6 +175,11 @@ fun ShareScreen(
                             )
                         },
                     ) { Text("Scan theirs") }
+                }
+                val err = scanError
+                if (err != null) {
+                    Spacer(Modifier.size(8.dp))
+                    Text(err, color = MaterialTheme.colorScheme.error)
                 }
             }
         }
