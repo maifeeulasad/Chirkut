@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- NFC Forum Type 4 Tag AID (D2760000850101), matched so a reader in
+     NDEF mode (Android reader-mode or any NDEF-savvy phone) picks up
+     our emitted chirkut://host:port URI. -->
+<host-apdu-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/app_name"
+    android:requireDeviceUnlock="false">
+    <aid-group android:description="@string/app_name"
+        android:category="other">
+        <aid-filter android:name="D2760000850101" />
+    </aid-group>
+</host-apdu-service>
