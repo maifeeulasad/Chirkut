@@ -36,10 +36,44 @@ public class Server implements IncomingConnectionListener {
 
     private Server(IncomingMessageListener incomingMessageListener,
                    IncomingConnectionListener incomingConnectionListener) throws IOException {
-        this.serverSocket = new ServerSocket(Default.PORT);
+        this.serverSocket = bindAvailablePort();
         this.serverIncomingConnection = new ServerIncomingConnection(this, this);
         this.incomingMessageListener = incomingMessageListener;
         this.incomingConnectionListener = incomingConnectionListener;
+        Log.i(TAG, "listening on port " + serverSocket.getLocalPort());
+    }
+
+    /**
+     * Tries {@link Default#PORT} first; if busy, walks the
+     * {@link Default#PORT_RANGE_START}..{@link Default#PORT_RANGE_END} range in
+     * a randomized order until one binds. Throws if every candidate is taken
+     * (unlikely — the range is 1001 wide).
+     */
+    private static ServerSocket bindAvailablePort() throws IOException {
+        try {
+            return new ServerSocket(Default.PORT);
+        } catch (IOException primaryBusy) {
+            Log.w(TAG, "default port " + Default.PORT + " busy, falling back", primaryBusy);
+        }
+        int size = Default.PORT_RANGE_END - Default.PORT_RANGE_START + 1;
+        java.util.List<Integer> candidates = new java.util.ArrayList<>(size);
+        for (int p = Default.PORT_RANGE_START; p <= Default.PORT_RANGE_END; p++) candidates.add(p);
+        java.util.Collections.shuffle(candidates);
+        IOException last = null;
+        for (Integer p : candidates) {
+            try {
+                return new ServerSocket(p);
+            } catch (IOException e) {
+                last = e;
+            }
+        }
+        throw new IOException("no free port in [" + Default.PORT_RANGE_START + ","
+                + Default.PORT_RANGE_END + "]", last);
+    }
+
+    /** Port the server actually bound to — may differ from {@link Default#PORT}. */
+    public int getBoundPort() {
+        return serverSocket.getLocalPort();
     }
 
     public static synchronized Server getServer(
